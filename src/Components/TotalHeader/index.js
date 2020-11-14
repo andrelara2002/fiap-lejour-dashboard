@@ -11,13 +11,17 @@ class TotalHeader extends Component {
       textos: "Casamentos",
       values: [1, 3, 2, 4, 5, 7, 6, 8, 10, 9, 11, 12]
     };
-    this.userData = api.get("user?");
-    console.log(this.userData);
   }
 
   componentDidMount() {
     this.generateGraphs();
+    this.receberUsuarios();
   }
+
+  receberUsuarios = async () => {
+    const response = await api.get("user");
+    console.log(response.data[0]);
+  };
 
   generateGraphs = () => {
     var ctx = document.getElementById("agendamentosChart").getContext("2d");
