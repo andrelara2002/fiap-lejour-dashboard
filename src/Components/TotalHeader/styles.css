@@ -1,0 +1,36 @@
+.main-mini {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
+
+.main-big {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 1fr;
+}
+
+.view-options {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+.view-options button {
+  margin: 1rem 0.2rem;
+}
+h1 {
+  color: var(--primary-text-color);
+}
+p {
+  color: var(--verde-agua-escuro);
+}
+h1,
+p {
+  margin: 0;
+  font-family: sans-serif;
+}
+strong {
+  color: var(--secondary-text-color);
+  font: 700 1rem sans-serif;
+}

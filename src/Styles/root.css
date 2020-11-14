@@ -1,0 +1,113 @@
+:root {
+  --primary-text-color: #585858;
+  --secondary-text-color: #9b9a9a;
+
+  --button-color: linear-gradient(263.69deg, #84b8e2 -5.62%, #86d0cb 77.09%);
+  --button-red-color: linear-gradient(269.41deg, #db5d79 0.41%, #e2645a 99.41%);
+
+  --verde-agua-escuro: #68bfb7;
+  --ceu-azul: #84b8e2;
+
+  --normal-shadow: 0px 3px 10px rgba(88, 88, 88, 0.1),
+    0px 16px 31px rgba(88, 88, 88, 0.1);
+  --hover-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
+
+  --buttom-shadow: 0px 4px 12px rgba(134, 208, 203, 0.05),
+    0px 18px 31px rgba(134, 208, 203, 0.38);
+  --button-red-shadow: 0px 4px 12px rgba(226, 100, 90, 0.05),
+    0px 18px 31px rgba(226, 100, 90, 0.38);
+
+  --graph-color: linear-gradient(
+    180deg,
+    #86d0cb 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+.mini-card {
+  transition: 300ms;
+  padding: 1rem;
+  margin: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 2rem;
+
+  box-shadow: var(--normal-shadow);
+}
+
+.big-card {
+  transition: 300ms;
+  border-radius: 2rem;
+
+  padding: 1rem;
+  margin: 1rem;
+
+  box-shadow: var(--normal-shadow);
+}
+
+.mini-card:hover,
+.big-card:hover {
+  box-shadow: var(--hover-shadow);
+  cursor: pointer;
+  transition: 300ms;
+}
+
+button {
+  -webkit-font-smoothing: antialiased;
+  transition: 300ms;
+
+  color: white;
+  border-radius: 2rem;
+
+  border: none;
+  padding: 1rem 3rem;
+
+  background: linear-gradient(263.69deg, #84b8e2 -5.62%, #86d0cb 77.09%);
+  box-shadow: var(--buttom-shadow);
+}
+
+button:hover {
+  transition: 300ms;
+  box-shadow: var(--hover-shadow);
+
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.mini-header {
+  margin: 1.6rem 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mini-header h1 {
+  text-align: start;
+  margin: 1rem auto;
+  font-size: 1.2rem;
+}
+
+input {
+  transition: 300ms;
+
+  margin: 1rem auto;
+  padding: 0.8rem 3rem;
+  border-radius: 2rem;
+
+  text-align: center;
+  font: 300 1rem var(--primary-text-color);
+  box-shadow: var(--hover-shadow);
+  border: 2px solid lightgrey;
+}
+
+input:focus {
+  transition: 300ms;
+  outline: none;
+  box-shadow: var(--buttom-shadow);
+  border-color: rgba(134, 208, 203, 1);
+}
