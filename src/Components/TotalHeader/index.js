@@ -11,6 +11,15 @@ class TotalHeader extends Component {
       textos: "Casamentos",
       values: [1, 3, 2, 4, 5, 7, 6, 8, 10, 9, 11, 12]
     };
+
+    this.state = {
+      usuarios: {
+        total: 0
+      },
+      casamentos: {
+        total: 0
+      }
+    };
   }
 
   componentDidMount() {
@@ -19,8 +28,27 @@ class TotalHeader extends Component {
   }
 
   receberUsuarios = async () => {
-    const response = await api.get("user");
-    console.log(response.data[0]);
+    const userData = await api.get("user");
+    const weddingData = await api.get("wedding");
+    const invoiceData = await api.get("invoice");
+    const apointmentData = await api.get("appointment");
+    const weddingFavorites = await api.get("wedding_favorites");
+
+    this.setState({
+      usuarios: {
+        total: userData.data.length
+      },
+      casamentos: {
+        total: weddingData.data.length
+      }
+    });
+    console.log(this.state.usuarios.valor);
+
+    console.log(userData.data);
+    console.log(weddingData.data);
+    console.log(invoiceData.data);
+    console.log(apointmentData.data);
+    console.log(weddingFavorites.data);
   };
 
   generateGraphs = () => {
@@ -147,12 +175,12 @@ class TotalHeader extends Component {
         <div className="main-mini">
           <div class="mini-card">
             <strong>Usuários</strong>
-            <h1>2.000</h1>
+            <h1>{this.state.usuarios.total}</h1>
             <p>+22%</p>
           </div>
           <div class="mini-card">
             <strong>Agendamentos</strong>
-            <h1>2.000</h1>
+            <h1>{this.state.casamentos.total}</h1>
             <p>+22%</p>
           </div>
           <div class="mini-card">

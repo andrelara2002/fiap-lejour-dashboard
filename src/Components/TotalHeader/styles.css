@@ -27,6 +27,7 @@ p {
 }
 h1,
 p {
+  transition: 300ms;
   margin: 0;
   font-family: sans-serif;
 }
