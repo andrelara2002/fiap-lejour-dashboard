@@ -39,7 +39,12 @@
   box-shadow: var(--normal-shadow);
 }
 
-.big-card {
+.big-chart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
   transition: 300ms;
   border-radius: 2rem;
 
@@ -49,10 +54,19 @@
   box-shadow: var(--normal-shadow);
 }
 
+.big-card {
+  transition: 300ms;
+  border-radius: 2rem;
+
+  padding: 1rem;
+  margin: 1rem;
+
+  box-shadow: var(--normal-shadow);
+}
+.big-chart:hover,
 .mini-card:hover,
 .big-card:hover {
   box-shadow: var(--hover-shadow);
-  cursor: pointer;
   transition: 300ms;
 }
 
@@ -76,6 +90,10 @@ button:hover {
 
   opacity: 0.8;
   cursor: pointer;
+}
+
+button:focus {
+  outline: none;
 }
 
 .mini-header {
@@ -110,4 +128,10 @@ input:focus {
   outline: none;
   box-shadow: var(--buttom-shadow);
   border-color: rgba(134, 208, 203, 1);
+}
+
+.Divisor {
+  width: 100%;
+  margin: 1rem 0;
+  border-bottom: 1px solid #eeeeee;
 }

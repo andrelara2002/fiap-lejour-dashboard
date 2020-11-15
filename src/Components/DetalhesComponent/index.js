@@ -157,6 +157,7 @@ class DetalhesComponent extends Component {
             <ul>{this.listaAgendamentos()}</ul>
           </div>
         </div>
+        <div className="Divisor" />
       </div>
     );
   }

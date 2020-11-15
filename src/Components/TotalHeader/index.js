@@ -64,6 +64,36 @@ class TotalHeader extends Component {
       }
     });
 
+    var fornecedoresCtx = document
+      .getElementById("fornecedoresChart")
+      .getContext("2d");
+    var fornecedoresChart = new Chart(fornecedoresCtx, {
+      type: "doughnut",
+      data: {
+        labels: ["Madeira", "Pedra", "Água"],
+        datasets: [
+          {
+            label: "Ranking de Estilos",
+            data: [10, 40, 50],
+            backgroundColor: ["#EA8079", "#68bfb7", "#84b8e2"],
+            borderColor: ["#E2645A"],
+            borderWidth: 2
+          }
+        ]
+      },
+      options: {
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true
+              }
+            }
+          ]
+        }
+      }
+    });
+
     var usuariosCtx = document.getElementById("usuariosChart").getContext("2d");
     var usuariosChart = new Chart(usuariosCtx, {
       type: "line",
@@ -142,13 +172,20 @@ class TotalHeader extends Component {
           </div>
         </div>
         <div className="main-big">
-          <div className="big-card">
-            <canvas id="agendamentosChart" width="400" height="300" />
+          <div className="big-chart">
+            <strong>Gráficos de Agendamentos</strong>
+            <canvas id="agendamentosChart" width="100" height="100" />
           </div>
-          <div className="big-card">
-            <canvas id="usuariosChart" width="400" height="300" />
+          <div className="big-chart">
+            <strong>Gráficos de Usuários</strong>
+            <canvas id="usuariosChart" width="100" height="100" />
+          </div>
+          <div className="big-chart">
+            <strong>Ranking de Estilos</strong>
+            <canvas id="fornecedoresChart" width="100" height="100" />
           </div>
         </div>
+        <div className="Divisor" />
       </div>
     );
   }
