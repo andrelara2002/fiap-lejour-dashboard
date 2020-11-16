@@ -46,8 +46,6 @@ class TotalHeader extends Component {
     const apointmentData = await api.get("appointment");
     const weddingFavorites = await api.get("wedding_favorites");
 
-    console.log(weddingData.data[0]);
-
     let today = new Date();
 
     userData.data.map((valor, idx) => {
@@ -59,11 +57,36 @@ class TotalHeader extends Component {
       this.setState({
         usuarios: {
           id: listId,
-          data: dataList,
-          total: userData.data.length
+          data: dataList
         }
       });
     });
+
+    weddingData.data.map((valor, idx) => {
+      const id_casamento_list = this.state.casamentos.id_casamento.concat(
+        weddingData.data[idx].ID
+      );
+      const id_owner_list = this.state.casamentos.id_cliente.concat(
+        weddingData.data[idx].OWNER_ID
+      );
+      const nr_convidados_list = this.state.casamentos.nr_convidados.concat(
+        weddingData.data[idx].NUMBER_OF_GUESTS
+      );
+      const estilo_list = this.state.casamentos.estilo.concat(
+        weddingData.data[idx].STYLE
+      );
+
+      this.setState({
+        casamentos: {
+          id_cliente: id_owner_list,
+          id_casamento: id_casamento_list,
+          nr_convidados: nr_convidados_list,
+          estilo: estilo_list
+        }
+      });
+    });
+
+    console.log(this.state.casamentos);
 
     this.setState({
       localData: {
