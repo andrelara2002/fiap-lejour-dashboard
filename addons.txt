@@ -1,0 +1,22 @@
+if (index === 1 || index === "1") {
+      return userData.data.map((valor, idx) => {
+        let dateInspect = new Date(userData.data[idx].CREATED_AT);
+
+        if (dateInspect.getFullYear() === today.getFullYear()) {
+          const listId = this.state.usuarios.id.concat(userData.data[idx].ID);
+          const dataList = this.state.usuarios.data.concat(
+            userData.data[idx].CREATED_AT
+          );
+          this.setState({
+            usuarios: {
+              id: listId,
+              data: dataList,
+              total: this.state.usuarios.id.length
+            }
+          });
+        } else {
+          console.log("Não é de 2020");
+        }
+        console.log(this.state.usuarios);
+      });
+    }

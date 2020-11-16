@@ -13,10 +13,22 @@ class TotalHeader extends Component {
     };
 
     this.state = {
+      localData: {
+        data: null
+      },
       usuarios: {
+        id: [],
+        data: [],
         total: 0
       },
       casamentos: {
+        id_cliente: [],
+        id_casamento: [],
+        nr_convidados: [],
+        estilo: [],
+        valor: [],
+        data: [],
+        valor_total: 0,
         total: 0
       }
     };
@@ -27,28 +39,46 @@ class TotalHeader extends Component {
     this.receberUsuarios();
   }
 
-  receberUsuarios = async () => {
+  receberUsuarios = async index => {
     const userData = await api.get("user");
     const weddingData = await api.get("wedding");
     const invoiceData = await api.get("invoice");
     const apointmentData = await api.get("appointment");
     const weddingFavorites = await api.get("wedding_favorites");
 
+    console.log(weddingData.data[0]);
+
+    let today = new Date();
+
+    userData.data.map((valor, idx) => {
+      const listId = this.state.usuarios.id.concat(userData.data[idx].ID);
+      const dataList = this.state.usuarios.data.concat(
+        userData.data[idx].CREATED_AT
+      );
+
+      this.setState({
+        usuarios: {
+          id: listId,
+          data: dataList,
+          total: userData.data.length
+        }
+      });
+    });
+
     this.setState({
+      localData: {
+        period: [7, 30, 90, 365],
+        data: today
+      },
       usuarios: {
+        id: [],
+        data: [],
         total: userData.data.length
       },
       casamentos: {
         total: weddingData.data.length
       }
     });
-    console.log(this.state.usuarios.valor);
-
-    console.log(userData.data);
-    console.log(weddingData.data);
-    console.log(invoiceData.data);
-    console.log(apointmentData.data);
-    console.log(weddingFavorites.data);
   };
 
   generateGraphs = () => {
@@ -170,7 +200,7 @@ class TotalHeader extends Component {
           <button>1 Semana</button>
           <button>30 Dias</button>
           <button>3 Meses</button>
-          <button>1 Ano</button>
+          <button onClick={() => this.receberUsuarios(1)}>1 Ano</button>
         </div>
         <div className="main-mini">
           <div class="mini-card">
