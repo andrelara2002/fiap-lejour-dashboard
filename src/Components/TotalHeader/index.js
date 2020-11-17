@@ -14,20 +14,8 @@ class TotalHeader extends Component {
 
     this.state = {
       localData: {
-        data: null,
-        period: [
-          "Janeiro",
-          "Fevereiro",
-          "Março",
-          "Abril",
-          "Junho",
-          "Julho",
-          "Agosto",
-          "Setembro",
-          "Outubro",
-          "Novembro",
-          "Dezembro"
-        ],
+        data: [],
+        period: [],
         graphData: {
           usuarios: [1, 3, 2, 4, 5, 7, 6, 8, 10, 9, 11, 12],
           agendamento: [1, 3, 2, 4, 5, 7, 6, 8, 10, 9, 11, 12]
@@ -35,8 +23,7 @@ class TotalHeader extends Component {
       },
       usuarios: {
         id: [],
-        data: [],
-        total: 0
+        data: []
       },
       casamentos: {
         id_cliente: [],
@@ -45,8 +32,7 @@ class TotalHeader extends Component {
         estilo: [],
         valor: [],
         data: [],
-        valor_total: 0,
-        total: 0
+        valor_total: 0
       }
     };
   }
@@ -177,38 +163,120 @@ class TotalHeader extends Component {
       const estilo_list = this.state.casamentos.estilo.concat(
         weddingData.data[idx].STYLE
       );
+      const date_list = this.state.casamentos.data.concat(
+        weddingData.data[idx].WEDDING_DATE
+      );
 
       this.setState({
         casamentos: {
           id_cliente: id_owner_list,
           id_casamento: id_casamento_list,
           nr_convidados: nr_convidados_list,
-          estilo: estilo_list
+          estilo: estilo_list,
+          data: date_list
         }
       });
     });
 
     this.setState({
       localData: {
-        period: [7, 30, 90, 365],
-        data: today
-      },
-      usuarios: {
-        id: [],
-        data: [],
-        total: userData.data.length
-      },
-      casamentos: {
-        total: weddingData.data.length
+        data: today,
+        period: this.state.localData.period,
+        graphData: this.state.localData.graphData
       }
     });
   };
 
   updateGraphics = num => {
-    console.log("hmm");
     if (num === 1 || num === "1") {
+      this.state.localData.graphData.agendamento = [];
+      var janeiro = 0;
+      var fevereiro = 0;
+      var marco = 0;
+      var abril = 0;
+      var mai = 0;
+      var jun = 0;
+      var jul = 0;
+      var ago = 0;
+      var sete = 0;
+      var out = 0;
+      var nov = 0;
+      var dez = 0;
+      this.state.casamentos.data.map((valor, idx) => {
+        let dateComparator = new Date(this.state.casamentos.data[idx]);
+        if (
+          dateComparator.getFullYear() ===
+          this.state.localData.data.getFullYear()
+        ) {
+          if (dateComparator.getMonth() === 0) {
+            console.log("Janeiro");
+            janeiro++;
+          } else if (dateComparator.getMonth() === 1) {
+            console.log("Fevereiro");
+            fevereiro++;
+          } else if (dateComparator.getMonth() === 2) {
+            console.log("Março");
+            marco++;
+          } else if (dateComparator.getMonth() === 3) {
+            console.log("Abril");
+            abril++;
+          } else if (dateComparator.getMonth() === 4) {
+            console.log("Maio");
+            mai++;
+          } else if (dateComparator.getMonth() === 5) {
+            console.log("Junho");
+            jun++;
+          } else if (dateComparator.getMonth() === 6) {
+            console.log("Julho");
+            jul++;
+          } else if (dateComparator.getMonth() === 7) {
+            console.log("Agosto");
+            ago++;
+          } else if (dateComparator.getMonth() === 8) {
+            console.log("Setembro");
+            sete++;
+          } else if (dateComparator.getMonth() === 9) {
+            console.log("Outubro");
+            out++;
+          } else if (dateComparator.getMonth() === 10) {
+            console.log("Novembro");
+            nov++;
+          } else if (dateComparator.getMonth() === 11) {
+            console.log("Dezembro");
+            dez++;
+          }
+
+          this.setState({
+            localData: {
+              data: this.state.localData.data,
+              period: this.state.localData.period,
+              graphData: {
+                usuarios: this.state.localData.graphData.usuarios,
+                agendamento: [
+                  janeiro,
+                  fevereiro,
+                  marco,
+                  abril,
+                  mai,
+                  jun,
+                  jul,
+                  ago,
+                  sete,
+                  out,
+                  nov,
+                  dez
+                ]
+              }
+            },
+            usuarios: this.state.usuarios,
+            casamentos: this.state.casamentos
+          });
+          console.log(this.state);
+        }
+      });
       this.setState({
         localData: {
+          data: this.state.localData.data,
           period: [
             "Janeiro",
             "Fevereiro",
@@ -221,13 +289,14 @@ class TotalHeader extends Component {
             "Outubro",
             "Novembro",
             "Dezembro"
-          ]
-        }
+          ],
+          graphData: this.state.localData.graphData
+        },
+        usuarios: this.state.usuarios,
+        casamentos: this.state.casamentos
       });
 
-      this.state.casamentos.data.map((valor, idx) => {
-        console.log("Hmmmm");
-      });
+      console.log(this.state);
 
       this.myChart.data.labels = this.state.localData.period;
       this.usuariosChart.data.labels = this.state.localData.period;
@@ -249,12 +318,12 @@ class TotalHeader extends Component {
         <div className="main-mini">
           <div class="mini-card">
             <strong>Usuários</strong>
-            <h1>{this.state.usuarios.total}</h1>
+            <h1>{this.state.usuarios.id.length}</h1>
             <p>+22%</p>
           </div>
           <div class="mini-card">
             <strong>Agendamentos</strong>
-            <h1>{this.state.casamentos.total}</h1>
+            <h1>{this.state.casamentos.id_cliente.length}</h1>
             <p>+22%</p>
           </div>
           <div class="mini-card">
