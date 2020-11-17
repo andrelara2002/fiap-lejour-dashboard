@@ -166,7 +166,7 @@ class DetalhesComponent extends Component {
               <li className="listElement">
                 <strong>valor</strong>
                 <strong>id</strong>
-                <strong>nrConvidados</strong>
+                <strong>conv</strong>
                 <strong>estilo</strong>
                 <strong>data</strong>
               </li>
@@ -178,7 +178,13 @@ class DetalhesComponent extends Component {
               <h1>Últimos Usuários</h1>
               <input />
             </div>
-            <ul>{this.listaUsuarios()}</ul>
+            <ul>
+              <li className="listElement">
+                <strong>id</strong>
+                <strong>data</strong>
+              </li>
+              {this.listaUsuarios()}
+            </ul>
           </div>
         </div>
         <div className="StatusAgendamento">
