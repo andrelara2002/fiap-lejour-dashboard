@@ -17,8 +17,8 @@ class TotalHeader extends Component {
         data: [],
         period: [],
         graphData: {
-          usuarios: [1, 3, 2, 4, 5, 7, 6, 8, 10, 9, 11, 12],
-          agendamento: [1, 3, 2, 4, 5, 7, 6, 8, 10, 9, 11, 12]
+          usuarios: [],
+          agendamento: []
         }
       },
       usuarios: {
@@ -217,7 +217,9 @@ class TotalHeader extends Component {
   };
 
   updateGraphics = num => {
+    console.log(this.state.localData);
     if (num === 1 || num === "1") {
+      const time_line = [];
       var janeiro = 0;
       var fevereiro = 0;
       var marco = 0;
@@ -238,70 +240,56 @@ class TotalHeader extends Component {
         ) {
           if (dateComparator.getMonth() === 0) {
             console.log("Janeiro");
+            console.log(janeiro);
             janeiro++;
           } else if (dateComparator.getMonth() === 1) {
             console.log("Fevereiro");
+            console.log(fevereiro);
             fevereiro++;
           } else if (dateComparator.getMonth() === 2) {
             console.log("Março");
+            console.log(marco);
             marco++;
           } else if (dateComparator.getMonth() === 3) {
             console.log("Abril");
+            console.log(abril);
             abril++;
           } else if (dateComparator.getMonth() === 4) {
             console.log("Maio");
+            console.log(mai);
             mai++;
           } else if (dateComparator.getMonth() === 5) {
             console.log("Junho");
+            console.log(jun);
             jun++;
           } else if (dateComparator.getMonth() === 6) {
             console.log("Julho");
+            console.log(jul);
             jul++;
           } else if (dateComparator.getMonth() === 7) {
             console.log("Agosto");
+            console.log(ago);
             ago++;
           } else if (dateComparator.getMonth() === 8) {
             console.log("Setembro");
+            console.log(sete);
             sete++;
           } else if (dateComparator.getMonth() === 9) {
             console.log("Outubro");
+            console.log(out);
             out++;
           } else if (dateComparator.getMonth() === 10) {
             console.log("Novembro");
+            console.log(nov);
             nov++;
           } else if (dateComparator.getMonth() === 11) {
             console.log("Dezembro");
+            console.log(dez);
             dez++;
           }
-
-          this.setState({
-            localData: {
-              data: this.state.localData.data,
-              period: this.state.localData.period,
-              graphData: {
-                usuarios: this.state.localData.graphData.usuarios,
-                agendamento: [
-                  janeiro,
-                  fevereiro,
-                  marco,
-                  abril,
-                  mai,
-                  jun,
-                  jul,
-                  ago,
-                  sete,
-                  out,
-                  nov,
-                  dez
-                ]
-              }
-            },
-            usuarios: this.state.usuarios,
-            casamentos: this.state.casamentos
-          });
-          console.log(this.state);
         }
       });
+
       this.setState({
         localData: {
           data: this.state.localData.data,
@@ -318,16 +306,35 @@ class TotalHeader extends Component {
             "Novembro",
             "Dezembro"
           ],
-          graphData: this.state.localData.graphData
+          graphData: {
+            usuarios: this.state.localData.graphData.usuarios,
+            agendamento: [
+              janeiro,
+              fevereiro,
+              marco,
+              abril,
+              mai,
+              jun,
+              jul,
+              ago,
+              sete,
+              out,
+              nov,
+              dez
+            ]
+          }
         },
         usuarios: this.state.usuarios,
         casamentos: this.state.casamentos
       });
+      console.log(this.state);
 
       console.log(this.state);
 
       this.myChart.data.labels = this.state.localData.period;
       this.usuariosChart.data.labels = this.state.localData.period;
+
+      this.myChart.data.datasets[0].data = this.state.localData.graphData.agendamento;
 
       this.usuariosChart.update();
       this.myChart.update();
