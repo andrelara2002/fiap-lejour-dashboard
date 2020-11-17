@@ -40,7 +40,7 @@ class TotalHeader extends Component {
         total_pending: 0,
         total_approved: 0,
         total_amount: 0,
-        data:[]
+        data: []
       }
     };
   }
@@ -194,10 +194,17 @@ class TotalHeader extends Component {
       }
     });
 
-    const invoice_total_pending = invoice_data.filter(x => x.ACCEPTED != "TRUE").length;
-    const invoice_total_approved = invoice_data.filter(x => x.ACCEPTED == "TRUE").length;
-    const invoice_total_amount = invoice_data.reduce((sum, item) => {return sum + item.AMOUNT}, 0).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-   
+    const invoice_total_pending = invoice_data.filter(x => x.ACCEPTED != "TRUE")
+      .length;
+    const invoice_total_approved = invoice_data.filter(
+      x => x.ACCEPTED == "TRUE"
+    ).length;
+    const invoice_total_amount = invoice_data
+      .reduce((sum, item) => {
+        return sum + item.AMOUNT;
+      }, 0)
+      .toLocaleString("pt-br", { style: "currency", currency: "BRL" });
+
     this.setState({
       invoices: {
         total_register: invoice_total_pending + invoice_total_approved,
@@ -207,12 +214,10 @@ class TotalHeader extends Component {
         data: invoice_data
       }
     });
-
   };
 
   updateGraphics = num => {
     if (num === 1 || num === "1") {
-      this.state.localData.graphData.agendamento = [];
       var janeiro = 0;
       var fevereiro = 0;
       var marco = 0;
