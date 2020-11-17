@@ -27,6 +27,14 @@ class DetalhesComponent extends Component {
         categoriaFornecedor: [],
         statusAgendamento: [],
         data: []
+      },
+
+      appointment: {
+        id: [],
+        id_casamento: [],
+        id_distribuidor: [],
+        status: [],
+        categoria_fornecedor: []
       }
     };
   }
@@ -36,6 +44,7 @@ class DetalhesComponent extends Component {
   receberDados = async () => {
     const userData = await api.get("user?limit=10");
     const weddingData = await api.get("wedding?limit=10");
+    const appointmentData = await api.get("appointment?limit=10");
 
     let today = new Date();
 
@@ -51,6 +60,35 @@ class DetalhesComponent extends Component {
           data: dataList
         }
       });
+    });
+
+    appointmentData.data.map((valor, idx) => {
+      const id_list = this.state.appointment.id.concat(
+        appointmentData.data[idx].ID
+      );
+      const id_casamento_list = this.state.appointment.id_casamento.concat(
+        appointmentData.data[idx].WEDDING_ID
+      );
+      const id_distribuidor_list = this.state.appointment.id_distribuidor.concat(
+        appointmentData.data[idx].VENDOR_ID
+      );
+      const status_list = this.state.appointment.status.concat(
+        appointmentData.data[idx].STATUS
+      );
+      const categoria_fornecedor_list = this.state.appointment.status.concat(
+        appointmentData.data[idx].VENDOR_CATEGORY
+      );
+
+      this.setState({
+        appointment: {
+          id: id_list,
+          id_casamento: id_casamento_list,
+          id_distribuidor: id_distribuidor_list,
+          status: status_list,
+          categoria_fornecedor: categoria_fornecedor_list
+        }
+      });
+      console.log(this.state.appointment);
     });
 
     weddingData.data.map((valor, idx) => {
@@ -69,6 +107,9 @@ class DetalhesComponent extends Component {
       const date_list = this.state.casamentos.data.concat(
         weddingData.data[idx].WEDDING_DATE
       );
+      const valor_list = this.state.casamentos.nrOrcamento.concat(
+        weddingData.data[idx].BUDGET
+      );
 
       this.setState({
         casamentos: {
@@ -76,6 +117,7 @@ class DetalhesComponent extends Component {
           idCasamento: id_casamento_list,
           nrConvidados: nr_convidados_list,
           estilo: estilo_list,
+          nrOrcamento: valor_list,
           data: date_list
         }
       });
@@ -115,8 +157,8 @@ class DetalhesComponent extends Component {
     return idCasamento.map((valor, idx) => {
       return (
         <li key={idx} className="listElement">
-          <strong>{valor}</strong>
           <strong>{idUsuario[idx]}</strong>
+          <strong>{nrOrcamento[idx]}</strong>
           <strong>{nrConvidados[idx]}</strong>
           <strong>{estilo[idx]}</strong>
           <strong>{data[idx]}</strong>
@@ -130,21 +172,21 @@ class DetalhesComponent extends Component {
 
   listaAgendamentos = () => {
     const {
-      idCasamento,
-      fornecedor,
-      categoriaFornecedor,
-      statusAgendamento,
-      data
-    } = this.state.agendamentos;
+      id,
+      id_casamento,
+      id_distribuidor,
+      status,
+      categoria_fornecedor
+    } = this.state.appointment;
 
-    return idCasamento.map((valor, idx) => {
+    return id.map((valor, idx) => {
       return (
         <li key={idx} className="listElement">
           <strong>{valor}</strong>
-          <strong>{fornecedor[idx]}</strong>
-          <strong>{categoriaFornecedor[idx]}</strong>
-          <strong>{statusAgendamento[idx]}</strong>
-          <strong>{data[idx]}</strong>
+          <strong>{id_casamento[idx]}</strong>
+          <strong>{id_distribuidor[idx]}</strong>
+          <strong>{status[idx]}</strong>
+          <strong>{categoria_fornecedor[idx]}</strong>
           <button className="list-button" onClick={() => this.redirect(idx)}>
             Acessar
           </button>
@@ -164,8 +206,8 @@ class DetalhesComponent extends Component {
             </div>
             <ul>
               <li className="listElement">
-                <strong>valor</strong>
                 <strong>id</strong>
+                <strong>valor</strong>
                 <strong>conv</strong>
                 <strong>estilo</strong>
                 <strong>data</strong>
