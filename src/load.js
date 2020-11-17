@@ -7,5 +7,4 @@ export default function Load() {
       <Load />
     </div>
   );
-  
 }

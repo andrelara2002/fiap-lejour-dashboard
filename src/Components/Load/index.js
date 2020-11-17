@@ -19,5 +19,4 @@ class Load extends Component {
     );
   }
 }
-
 export default Load;
