@@ -30,6 +30,13 @@ class TotalHeader extends Component {
         data: [],
         valor_total: 0,
         total: 0
+      },
+      invoices: {
+        total_register: 0,
+        total_pending: 0,
+        total_approved: 0,
+        total_amount: 0,
+        data:[]
       }
     };
   }
@@ -42,10 +49,11 @@ class TotalHeader extends Component {
   receberUsuarios = async index => {
     const userData = await api.get("user");
     const weddingData = await api.get("wedding");
-    const invoiceData = await api.get("invoice");
+    const invoice_data = (await api.get("invoice")).data;
     const apointmentData = await api.get("appointment");
     const weddingFavorites = await api.get("wedding_favorites");
 
+    
     let today = new Date();
 
     userData.data.map((valor, idx) => {
@@ -86,8 +94,6 @@ class TotalHeader extends Component {
       });
     });
 
-    console.log(this.state.casamentos);
-
     this.setState({
       localData: {
         period: [7, 30, 90, 365],
@@ -100,6 +106,21 @@ class TotalHeader extends Component {
       },
       casamentos: {
         total: weddingData.data.length
+      }
+    });
+  
+   
+    const invoice_total_pending = invoice_data.filter(x => x.ACCEPTED != "TRUE").length;
+    const invoice_total_approved = invoice_data.filter(x => x.ACCEPTED == "TRUE").length;
+    const invoice_total_amount = invoice_data.reduce((sum, item) => {return sum + item.AMOUNT}, 0).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+   
+    this.setState({
+      invoices: {
+        total_register: invoice_total_pending + invoice_total_approved,
+        total_pending: invoice_total_pending,
+        total_approved: invoice_total_approved,
+        total_amount: invoice_total_amount,
+        data: invoice_data
       }
     });
   };
@@ -238,17 +259,17 @@ class TotalHeader extends Component {
           </div>
           <div class="mini-card">
             <strong>Pendentes</strong>
-            <h1>2.000</h1>
+            <h1>{this.state.invoices.total_pending}</h1>
             <p>+22%</p>
           </div>
           <div class="mini-card">
-            <strong>Atrasados</strong>
-            <h1>2.000</h1>
+            <strong>Aprovados</strong>
+            <h1>{this.state.invoices.total_approved}</h1>
             <p>+22%</p>
           </div>
           <div class="mini-card">
             <strong>Total</strong>
-            <h1>2.000</h1>
+            <h1>{this.state.invoices.total_amount}</h1>
             <p>+22%</p>
           </div>
         </div>
