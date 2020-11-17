@@ -1,68 +1,93 @@
 import React, { Component } from "react";
 
 import "./styles.css";
+import api from "../../Api.js";
 import "../../Styles/root.css";
 
 class DetalhesComponent extends Component {
   constructor(props) {
     super();
-    this.casamentos = {
-      idCasamento: [1, 2, 3],
-      idUsuario: [2002, 2018, 2020],
-      nrConvidados: [300, 100, 180],
-      nrOrcamento: [2400.0, 3000.0, 9000.0],
-      estilo: ["Festança", "Coquetel", "Memorável"],
-      data: ["19-11-2020", "21-01-2021", "23-10-2022"]
-    };
+    this.state = {
+      casamentos: {
+        idCasamento: [],
+        idUsuario: [],
+        nrConvidados: [],
+        nrOrcamento: [],
+        estilo: [],
+        data: []
+      },
+      usuario: {
+        idUsuario: [],
+        data: []
+      },
 
-    this.usuario = {
-      idUsuario: [2002, 2018, 2020],
-      data: ["19-11-2020", "21-01-2021", "23-10-2022"]
-    };
-
-    this.agendamentos = {
-      idCasamento: [1, 2, 3, 4, 5, 6],
-      fornecedor: [
-        "Fast Shop",
-        "Fast Shop",
-        "Fast Shop",
-        "Fast Shop",
-        "Fast Shop",
-        "Fast Shop"
-      ],
-      categoriaFornecedor: [
-        "Decoração",
-        "Buffet",
-        "Decoração",
-        "Decoração",
-        "Decoração",
-        "Buffet"
-      ],
-      statusAgendamento: [
-        "Atrasado",
-        "Concluido",
-        "Pendente",
-        "Concluido",
-        "Concluido",
-        "Atrasado"
-      ],
-      data: [
-        "19-11-2002",
-        "21-12-2020",
-        "30-08-2001",
-        "20-12-2021",
-        "16-09-2020",
-        "12-12-2012"
-      ]
+      agendamentos: {
+        idCasamento: [],
+        fornecedor: [],
+        categoriaFornecedor: [],
+        statusAgendamento: [],
+        data: []
+      }
     };
   }
+  componentDidMount() {
+    this.receberDados();
+  }
+  receberDados = async () => {
+    const userData = await api.get("user?limit=10");
+    const weddingData = await api.get("wedding?limit=10");
+
+    let today = new Date();
+
+    userData.data.map((valor, idx) => {
+      const listId = this.state.usuario.idUsuario.concat(userData.data[idx].ID);
+      const dataList = this.state.usuario.data.concat(
+        userData.data[idx].CREATED_AT
+      );
+
+      this.setState({
+        usuario: {
+          idUsuario: listId,
+          data: dataList
+        }
+      });
+    });
+
+    weddingData.data.map((valor, idx) => {
+      const id_casamento_list = this.state.casamentos.idCasamento.concat(
+        weddingData.data[idx].ID
+      );
+      const id_owner_list = this.state.casamentos.idUsuario.concat(
+        weddingData.data[idx].OWNER_ID
+      );
+      const nr_convidados_list = this.state.casamentos.nrConvidados.concat(
+        weddingData.data[idx].NUMBER_OF_GUESTS
+      );
+      const estilo_list = this.state.casamentos.estilo.concat(
+        weddingData.data[idx].STYLE
+      );
+      const date_list = this.state.casamentos.data.concat(
+        weddingData.data[idx].WEDDING_DATE
+      );
+
+      this.setState({
+        casamentos: {
+          idUsuario: id_owner_list,
+          idCasamento: id_casamento_list,
+          nrConvidados: nr_convidados_list,
+          estilo: estilo_list,
+          data: date_list
+        }
+      });
+    });
+  };
 
   redirect = num => {
     console.log(num);
   };
 
   listaUsuarios = () => {
-    const { idUsuario, data } = this.usuario;
+    const { idUsuario, data } = this.state.usuario;
 
     return idUsuario.map((valor, idx) => {
       return (
@@ -85,7 +110,7 @@ class DetalhesComponent extends Component {
       nrOrcamento,
       estilo,
       data
-    } = this.casamentos;
+    } = this.state.casamentos;
 
     return idCasamento.map((valor, idx) => {
       return (
@@ -93,7 +118,6 @@ class DetalhesComponent extends Component {
           <strong>{valor}</strong>
           <strong>{idUsuario[idx]}</strong>
           <strong>{nrConvidados[idx]}</strong>
-          <strong>{nrOrcamento[idx]}</strong>
           <strong>{estilo[idx]}</strong>
           <strong>{data[idx]}</strong>
           <button className="list-button" onClick={() => this.redirect(idx)}>
@@ -111,7 +135,7 @@ class DetalhesComponent extends Component {
       categoriaFornecedor,
       statusAgendamento,
       data
-    } = this.agendamentos;
+    } = this.state.agendamentos;
 
     return idCasamento.map((valor, idx) => {
       return (
