@@ -1,0 +1,50 @@
+.container {
+  width: 100vw;
+  height: 100vh;
+  background: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+
+ .loader {
+	 display: inline-block;
+	 position: relative;
+   width: 100px;
+	 height: 100px;
+}
+ .loader-container {
+   display: flex;
+	 align-items: center;
+	 flex-direction: column;
+	 justify-content: center;
+   
+}
+
+
+
+
+@keyframes loading {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+.loader {
+  background: #E7E7E7;
+  position: relative;
+  height: 8px;
+  width: 100%
+}
+
+.loader::after {
+  animation: loading 6s infinite ease-in-out;
+  background: #EA8079;
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0
+}
