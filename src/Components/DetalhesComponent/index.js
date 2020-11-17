@@ -235,7 +235,16 @@ class DetalhesComponent extends Component {
               <h1>Status de Agendamentos</h1>
               <input />
             </div>
-            <ul>{this.listaAgendamentos()}</ul>
+            <ul>
+              <li className="listElement">
+                <strong>id</strong>
+                <strong>id_casamento</strong>
+                <strong>conv</strong>
+                <strong>status</strong>
+                <strong>id_dis</strong>
+              </li>
+              {this.listaAgendamentos()}
+            </ul>
           </div>
         </div>
         <div className="Divisor" />
