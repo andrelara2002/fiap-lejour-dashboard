@@ -5,12 +5,18 @@ ul {
 }
 
 li {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 2fr 2fr 2fr;
+  grid-template-rows: 1fr;
   align-items: center;
-  margin: 1rem 0;
+  margin: 1rem 0.6rem;
   border-bottom: 1px solid #f0f0f0;
+}
+
+#card_usuarios li {
+  display: grid;
+  grid-template-columns: 1fr 2fr 2fr;
+  grid-template-rows: 1fr;
 }
 
 .list-button {

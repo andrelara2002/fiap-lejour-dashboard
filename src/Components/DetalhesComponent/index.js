@@ -162,9 +162,18 @@ class DetalhesComponent extends Component {
               <h1>Últimos Agendamentos</h1>
               <input />
             </div>
-            <ul>{this.listaCasamentos()}</ul>
+            <ul>
+              <li className="listElement">
+                <strong>valor</strong>
+                <strong>id</strong>
+                <strong>nrConvidados</strong>
+                <strong>estilo</strong>
+                <strong>data</strong>
+              </li>
+              {this.listaCasamentos()}
+            </ul>
           </div>
-          <div className="big-card">
+          <div className="big-card" id="card_usuarios">
             <div className="mini-header">
               <h1>Últimos Usuários</h1>
               <input />
