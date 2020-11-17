@@ -9,12 +9,29 @@ class TotalHeader extends Component {
     super();
     this.states = {
       textos: "Casamentos",
-      values: [1, 3, 2, 4, 5, 7, 6, 8, 10, 9, 11, 12]
+      values: []
     };
 
     this.state = {
       localData: {
-        data: null
+        data: null,
+        period: [
+          "Janeiro",
+          "Fevereiro",
+          "Março",
+          "Abril",
+          "Junho",
+          "Julho",
+          "Agosto",
+          "Setembro",
+          "Outubro",
+          "Novembro",
+          "Dezembro"
+        ],
+        graphData: {
+          usuarios: [1, 3, 2, 4, 5, 7, 6, 8, 10, 9, 11, 12],
+          agendamento: [1, 3, 2, 4, 5, 7, 6, 8, 10, 9, 11, 12]
+        }
       },
       usuarios: {
         id: [],
@@ -42,8 +59,93 @@ class TotalHeader extends Component {
   }
 
   componentDidMount() {
-    this.generateGraphs();
     this.receberUsuarios();
+
+    var ctx = document.getElementById("agendamentosChart").getContext("2d");
+    this.myChart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: this.state.localData.period,
+        datasets: [
+          {
+            label: "Agendamentos - 1 ano",
+            data: this.state.localData.graphData.agendamento,
+            backgroundColor: ["#EA8079"],
+            borderColor: ["#E2645A"],
+            borderWidth: 2
+          }
+        ]
+      },
+      options: {
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true
+              }
+            }
+          ]
+        }
+      }
+    });
+
+    var fornecedoresCtx = document
+      .getElementById("fornecedoresChart")
+      .getContext("2d");
+    this.fornecedoresChart = new Chart(fornecedoresCtx, {
+      type: "doughnut",
+      data: {
+        labels: ["Madeira", "Pedra", "Água"],
+        datasets: [
+          {
+            label: "Ranking de Estilos",
+            data: [10, 40, 50],
+            backgroundColor: ["#EA8079", "#68bfb7", "#84b8e2"],
+            borderColor: ["#E2645A"],
+            borderWidth: 2
+          }
+        ]
+      },
+      options: {
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true
+              }
+            }
+          ]
+        }
+      }
+    });
+
+    var usuariosCtx = document.getElementById("usuariosChart").getContext("2d");
+    this.usuariosChart = new Chart(usuariosCtx, {
+      type: "line",
+      data: {
+        labels: this.state.localData.period,
+        datasets: [
+          {
+            label: "Usuários - 1 ano",
+            data: this.state.localData.graphData.usuarios,
+            backgroundColor: ["#86D0CB"],
+            borderColor: ["#68BFB7"],
+            borderWidth: 2
+          }
+        ]
+      },
+      options: {
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true
+              }
+            }
+          ]
+        }
+      }
+    });
   }
 
   receberUsuarios = async index => {
@@ -53,7 +155,6 @@ class TotalHeader extends Component {
     const apointmentData = await api.get("appointment");
     const weddingFavorites = await api.get("wedding_favorites");
 
-    
     let today = new Date();
 
     userData.data.map((valor, idx) => {
@@ -108,8 +209,7 @@ class TotalHeader extends Component {
         total: weddingData.data.length
       }
     });
-  
-   
+
     const invoice_total_pending = invoice_data.filter(x => x.ACCEPTED != "TRUE").length;
     const invoice_total_approved = invoice_data.filter(x => x.ACCEPTED == "TRUE").length;
     const invoice_total_amount = invoice_data.reduce((sum, item) => {return sum + item.AMOUNT}, 0).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
@@ -123,118 +223,40 @@ class TotalHeader extends Component {
         data: invoice_data
       }
     });
+
   };
 
-  generateGraphs = () => {
-    var ctx = document.getElementById("agendamentosChart").getContext("2d");
-    var myChart = new Chart(ctx, {
-      type: "line",
-      data: {
-        labels: [
-          "Janeiro",
-          "Fevereiro",
-          "Março",
-          "Abril",
-          "Junho",
-          "Julho",
-          "Agosto",
-          "Setembro",
-          "Outubro",
-          "Novembro",
-          "Dezembro"
-        ],
-        datasets: [
-          {
-            label: "Agendamentos - 1 ano",
-            data: this.states.values,
-            backgroundColor: ["#EA8079"],
-            borderColor: ["#E2645A"],
-            borderWidth: 2
-          }
-        ]
-      },
-      options: {
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true
-              }
-            }
+  updateGraphics = num => {
+    console.log("hmm");
+    if (num === 1 || num === "1") {
+      this.setState({
+        localData: {
+          period: [
+            "Janeiro",
+            "Fevereiro",
+            "Março",
+            "Abril",
+            "Junho",
+            "Julho",
+            "Agosto",
+            "Setembro",
+            "Outubro",
+            "Novembro",
+            "Dezembro"
           ]
         }
-      }
-    });
+      });
 
-    var fornecedoresCtx = document
-      .getElementById("fornecedoresChart")
-      .getContext("2d");
-    var fornecedoresChart = new Chart(fornecedoresCtx, {
-      type: "doughnut",
-      data: {
-        labels: ["Madeira", "Pedra", "Água"],
-        datasets: [
-          {
-            label: "Ranking de Estilos",
-            data: [10, 40, 50],
-            backgroundColor: ["#EA8079", "#68bfb7", "#84b8e2"],
-            borderColor: ["#E2645A"],
-            borderWidth: 2
-          }
-        ]
-      },
-      options: {
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true
-              }
-            }
-          ]
-        }
-      }
-    });
+      this.state.casamentos.data.map((valor, idx) => {
+        console.log("Hmmmm");
+      });
 
-    var usuariosCtx = document.getElementById("usuariosChart").getContext("2d");
-    var usuariosChart = new Chart(usuariosCtx, {
-      type: "line",
-      data: {
-        labels: [
-          "Janeiro",
-          "Fevereiro",
-          "Março",
-          "Abril",
-          "Junho",
-          "Julho",
-          "Agosto",
-          "Setembro",
-          "Outubro",
-          "Novembro",
-          "Dezembro"
-        ],
-        datasets: [
-          {
-            label: "Usuários - 1 ano",
-            data: [1, 3, 2, 4, 5, 7, 6, 8, 10, 9, 11, 12],
-            backgroundColor: ["#86D0CB"],
-            borderColor: ["#68BFB7"],
-            borderWidth: 2
-          }
-        ]
-      },
-      options: {
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true
-              }
-            }
-          ]
-        }
-      }
-    });
+      this.myChart.data.labels = this.state.localData.period;
+      this.usuariosChart.data.labels = this.state.localData.period;
+
+      this.usuariosChart.update();
+      this.myChart.update();
+    }
   };
 
   render() {
@@ -244,7 +266,7 @@ class TotalHeader extends Component {
           <button>1 Semana</button>
           <button>30 Dias</button>
           <button>3 Meses</button>
-          <button onClick={() => this.receberUsuarios(1)}>1 Ano</button>
+          <button onClick={() => this.updateGraphics(1)}>1 Ano</button>
         </div>
         <div className="main-mini">
           <div class="mini-card">
