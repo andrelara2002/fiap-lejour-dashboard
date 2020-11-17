@@ -44,7 +44,7 @@ class DetalhesComponent extends Component {
   receberDados = async () => {
     const userData = await api.get("user?limit=10");
     const weddingData = await api.get("wedding?limit=10");
-    const appointmentData = await api.get("appointment?limit=10");
+    const appointmentData = await api.get("appointment?limit=20");
 
     let today = new Date();
 
