@@ -4,9 +4,7 @@ import Chart from "chart.js";
 import "./styles.css";
 import "../../Styles/root.css";
 
-
-
-import lodash from 'lodash'
+import lodash from "lodash";
 import getDayOfYear from "date-fns/esm/fp/getDayOfYear";
 import getDayOfWeek from "date-fns/esm/fp/getDay";
 import graph_icon from "../../Images/graph-icon.svg";
@@ -133,7 +131,7 @@ class TotalHeader extends Component {
     this.notasChart = new Chart(notasCtx, {
       type: "doughnut",
       data: {
-        labels: [''],
+        labels: [""],
         datasets: [
           {
             label: "1 ano",
@@ -145,7 +143,8 @@ class TotalHeader extends Component {
               "#FFB854",
               "#DB5D79",
               "#E2645A",
-              "#86D0CB"
+              "#86D0CB",
+              "#D46382"
             ],
             borderColor: ["#E2645A"],
             borderWidth: 2
@@ -216,68 +215,69 @@ class TotalHeader extends Component {
   }
 
   loadDatas() {
-
-    api.get("invoice")
-      .then((response) => {
+    api
+      .get("invoice")
+      .then(response => {
         return response;
       })
-      .catch((response) => {
+      .catch(response => {
         response.data = invoiceDatabase;
         return response;
       })
-      .then((response) => {
+      .then(response => {
         var invoices = this.getInvoiceForState(response.data);
         this.setState({
           invoices: invoices,
           total_invoices_register: invoices.total_register,
           total__invoices_pending: invoices.total_pending,
           total_invoices_approved: invoices.total_approved,
-          total_invoices_amount: invoices.total_amount,
+          total_invoices_amount: invoices.total_amount
         });
-
       });
 
-    api.get("user")
-      .then((response) => {
+    api
+      .get("user")
+      .then(response => {
         return response;
       })
-      .catch((response) => {
+      .catch(response => {
         response.data = userDatabase;
         return response;
       })
-      .then((response) => {
+      .then(response => {
         const user_data = response.data;
         var listId = [];
         var dataList = [];
 
         user_data.map((valor, idx) => {
           listId = listId.concat(user_data[idx].ID);
-          dataList = dataList.concat(
-            user_data[idx].CREATED_AT
-          );
+          dataList = dataList.concat(user_data[idx].CREATED_AT);
         });
 
-        this.setState({
-          usuarios: {
-            id: listId,
-            data: dataList
+        this.setState(
+          {
+            usuarios: {
+              id: listId,
+              data: dataList
+            },
+            total_users: dataList.length
           },
-          total_users: dataList.length
-        }, () => {
-          this.filterDataChars(filterChars.Year);
-        });
-
+          () => {
+            this.filterDataChars(filterChars.Year);
+          }
+        );
       });
 
-    api.get("wedding")
-      .then((response) => {
+    api
+      .get("wedding")
+      .then(response => {
         return response;
       })
-      .catch((response) => {
+      .catch(response => {
         response.data = wenddingDatabase;
         return response;
       })
-      .then((response) => {
+      .then(response => {
         const wedding_data = response.data;
 
         var id_casamento_list = [];
@@ -287,46 +287,40 @@ class TotalHeader extends Component {
         var date_list = [];
 
         wedding_data.map((valor, idx) => {
+          id_casamento_list = id_casamento_list.concat(wedding_data[idx].ID);
 
-          id_casamento_list = id_casamento_list.concat(
-            wedding_data[idx].ID
-          );
-
-          id_owner_list = id_owner_list.concat(
-            wedding_data[idx].OWNER_ID
-          );
+          id_owner_list = id_owner_list.concat(wedding_data[idx].OWNER_ID);
 
           nr_convidados_list = nr_convidados_list.concat(
             wedding_data[idx].NUMBER_OF_GUESTS
           );
 
-          estilo_list = estilo_list.concat(
-            wedding_data[idx].STYLE
-          );
+          estilo_list = estilo_list.concat(wedding_data[idx].STYLE);
 
-          date_list = date_list.concat(
-            wedding_data[idx].WEDDING_DATE
-          );
+          date_list = date_list.concat(wedding_data[idx].WEDDING_DATE);
         });
 
-        this.setState({
-          casamentos: {
-            id_cliente: id_owner_list,
-            id_casamento: id_casamento_list,
-            nr_convidados: nr_convidados_list,
-            estilo: estilo_list,
-            data: date_list
+        this.setState(
+          {
+            casamentos: {
+              id_cliente: id_owner_list,
+              id_casamento: id_casamento_list,
+              nr_convidados: nr_convidados_list,
+              estilo: estilo_list,
+              data: date_list
+            },
+            total_weddings: date_list
           },
-          total_weddings: date_list
-        }, () => {
-          this.filterDataChars(filterChars.Year);
-        });
-      });;
+          () => {
+            this.filterDataChars(filterChars.Year);
+          }
+        );
+      });
 
     //const weddingData = await api.get("wedding");
     //const apointmentData = await api.get("appointment");
     //const weddingFavorites = await api.get("wedding_favorites");
-  };
+  }
 
   getItemsInMonth = (year, month, data) => {
     var date = new Date(data);
@@ -389,24 +383,26 @@ class TotalHeader extends Component {
 
   updateNotasChart = (notasTotalInMonths, period, filterChar) => {
     var invoices = this.getInvoiceForState(notasTotalInMonths);
-    this.setState({
-      invoices: this.state.invoices,
-      total_invoices_register: invoices.total_register,
-      total__invoices_pending: invoices.total_pending,
-      total_invoices_approved: invoices.total_approved,
-      total_invoices_amount: invoices.total_amount,
-    },
+    this.setState(
+      {
+        invoices: this.state.invoices,
+        total_invoices_register: invoices.total_register,
+        total__invoices_pending: invoices.total_pending,
+        total_invoices_approved: invoices.total_approved,
+        total_invoices_amount: invoices.total_amount
+      },
       () => {
-
         var labels = [];
         var data = [];
         var colors = [];
-        var dict = lodash.groupBy(notasTotalInMonths, 'VENDOR_CATEGORY');
-        Object.keys(dict).forEach(function (key) {
+        var dict = lodash.groupBy(notasTotalInMonths, "VENDOR_CATEGORY");
+        Object.keys(dict).forEach(function(key) {
           labels.push(key);
-          data.push(dict[key].reduce((sum, item) => {
-            return sum + item.AMOUNT;
-          }, 0))
+          data.push(
+            dict[key].reduce((sum, item) => {
+              return sum + item.AMOUNT;
+            }, 0)
+          );
           var randomColor = Math.floor(Math.random() * 16777215).toString(16);
           colors.push("#" + randomColor);
         });
@@ -416,8 +412,9 @@ class TotalHeader extends Component {
         this.notasChart.data.datasets[0].data = data;
         //this.notasChart.data.datasets[0].backgroundColor = colors;
         this.notasChart.update();
-      });
-  }
+      }
+    );
+  };
 
   filterDataChars = filterChar => {
     var weddingTotalInMonths = [];
