@@ -4,6 +4,8 @@ import "./styles.css";
 import api from "../../Api.js";
 import "../../Styles/root.css";
 
+import search_icon from '../../Images/search-icon.svg'
+
 class DetalhesComponent extends Component {
   constructor(props) {
     super();
@@ -202,7 +204,10 @@ class DetalhesComponent extends Component {
           <div className="big-card">
             <div className="mini-header">
               <h1>Últimos Agendamentos</h1>
-              <input />
+              <div className='search-div'>
+                <input />
+                <button><img src={search_icon} alt='pesquisar' /></button>
+              </div>
             </div>
             <ul>
               <li className="listElement">
@@ -218,7 +223,10 @@ class DetalhesComponent extends Component {
           <div className="big-card" id="card_usuarios">
             <div className="mini-header">
               <h1>Últimos Usuários</h1>
-              <input />
+              <div className='search-div'>
+                <input />
+                <button><img src={search_icon} alt='pesquisar' /></button>
+              </div>
             </div>
             <ul>
               <li className="listElement">
@@ -233,7 +241,10 @@ class DetalhesComponent extends Component {
           <div className="big-card">
             <div className="mini-header">
               <h1>Status de Agendamentos</h1>
-              <input />
+              <div className='search-div'>
+                <input />
+                <button><img src={search_icon} alt='pesquisar' /></button>
+              </div>
             </div>
             <ul>
               <li className="listElement">

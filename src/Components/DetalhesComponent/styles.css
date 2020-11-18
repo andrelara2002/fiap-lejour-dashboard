@@ -28,3 +28,18 @@ li {
   grid-template-columns: 3fr 2fr;
   grid-template-rows: 1fr;
 }
+
+.search-div{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-div img{
+  width: 1rem;
+}
+
+.search-div button{
+  margin-left: .2rem;
+  padding: 1rem;
+}
