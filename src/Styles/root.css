@@ -7,7 +7,7 @@
 
   --verde-agua-escuro: #68bfb7;
   --ceu-azul: #84b8e2;
-  --pink: #DB5D79;
+  --pink: #db5d79;
 
   --normal-shadow: 0px 3px 10px rgba(88, 88, 88, 0.1),
     0px 16px 31px rgba(88, 88, 88, 0.1);
@@ -84,7 +84,7 @@ button {
   background: linear-gradient(263.69deg, #84b8e2 -5.62%, #86d0cb 77.09%);
   box-shadow: var(--buttom-shadow);
 
-  font: 300 1rem 'Lato', sans-serif;;
+  font: 300 1rem "Lato", sans-serif;
 }
 
 button:hover {
@@ -94,7 +94,7 @@ button:hover {
   opacity: 0.8;
   cursor: pointer;
 
-  background: linear-gradient(263.69deg, #84b8e2 -5.62%, #84b8e2 77.09%); ;
+  background: linear-gradient(263.69deg, #84b8e2 -5.62%, #84b8e2 77.09%);
 }
 
 button:focus {
@@ -109,7 +109,7 @@ button:focus {
 }
 
 .mini-header h1 {
-  font-family: 'Merriweather', serif;
+  font-family: "Merriweather", serif;
   text-align: start;
   margin: 1rem auto;
   padding: 0 1rem;
@@ -125,7 +125,7 @@ input {
   border-radius: 2rem;
 
   text-align: center;
-  font: 300 1.2rem 'Lato', sans-serif;
+  font: 300 1.2rem "Lato", sans-serif;
   box-shadow: var(--hover-shadow);
   border: 2px solid lightgrey;
 }
@@ -141,13 +141,16 @@ input:focus {
   border-bottom: 1px solid #eeeeee;
 }
 
-
-.inputHeader{
+.inputHeader {
   display: flex;
   justify-content: space-between;
   flex-direction: row;
   align-items: center;
 }
-.inputHeader img{
+.inputHeader img {
   margin-right: 1rem;
+}
+
+.style-modifier {
+  color: var(--verde-agua-escuro);
 }
