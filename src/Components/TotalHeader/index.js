@@ -3,7 +3,41 @@ import api from "../../Api.js";
 import Chart from "chart.js";
 import "./styles.css";
 import "../../Styles/root.css";
+import getDayOfYear from "date-fns/esm/fp/getDayOfYear"
+import getDayOfWeek from "date-fns/esm/fp/getDay"
 
+const monthsOfYear = [
+  "Janeiro",
+  "Fevereiro",
+  "Março",
+  "Abril",
+  "Junho",
+  "Julho",
+  "Agosto",
+  "Setembro",
+  "Outubro",
+  "Novembro",
+  "Dezembro"
+];
+
+const dayOfWeek = [
+  "Domingo",
+  "Segunda",
+  "Terça",
+  "Quarta",
+  "Quinta",
+  "Sexta",
+  "Sábado"
+];
+
+
+
+const filterChars = {
+  Year: 'year',
+  ThreeMonths: 'threeMonths',
+  OneMonth: 'oneMonth',
+  OneWeek: 'oneWeek'
+}
 class TotalHeader extends Component {
   constructor(props) {
     super();
@@ -12,7 +46,7 @@ class TotalHeader extends Component {
       values: []
     };
 
-    this.state = {     
+    this.state = {
       localData: {
         data: [],
         period: [],
@@ -47,17 +81,21 @@ class TotalHeader extends Component {
 
   componentDidMount() {
 
-    this.receberUsuarios();
+    this.buildChars();
+    this.loadDatas();
+  }
 
+
+  buildChars() {
     var ctx = document.getElementById("agendamentosChart").getContext("2d");
     this.myChart = new Chart(ctx, {
       type: "line",
       data: {
-        labels: this.state.localData.period,
+        labels: monthsOfYear,
         datasets: [
           {
             label: "Agendamentos - 1 ano",
-            data: this.state.localData.graphData.agendamento,
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             backgroundColor: ["#EA8079"],
             borderColor: ["#E2645A"],
             borderWidth: 2
@@ -111,11 +149,11 @@ class TotalHeader extends Component {
     this.usuariosChart = new Chart(usuariosCtx, {
       type: "line",
       data: {
-        labels: this.state.localData.period,
+        labels: monthsOfYear,
         datasets: [
           {
             label: "Usuários - 1 ano",
-            data: this.state.localData.graphData.usuarios,
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             backgroundColor: ["#86D0CB"],
             borderColor: ["#68BFB7"],
             borderWidth: 2
@@ -136,64 +174,7 @@ class TotalHeader extends Component {
     });
   }
 
-  receberUsuarios = async index => {
-    const userData = await api.get("user");
-    const weddingData = await api.get("wedding");
-    const invoice_data = (await api.get("invoice")).data;
-    const apointmentData = await api.get("appointment");
-    const weddingFavorites = await api.get("wedding_favorites");
-
-    let today = new Date();
-
-    userData.data.map((valor, idx) => {
-      const listId = this.state.usuarios.id.concat(userData.data[idx].ID);
-      const dataList = this.state.usuarios.data.concat(
-        userData.data[idx].CREATED_AT
-      );
-
-      this.setState({
-        usuarios: {
-          id: listId,
-          data: dataList
-        }
-      });
-    });
-
-    weddingData.data.map((valor, idx) => {
-      const id_casamento_list = this.state.casamentos.id_casamento.concat(
-        weddingData.data[idx].ID
-      );
-      const id_owner_list = this.state.casamentos.id_cliente.concat(
-        weddingData.data[idx].OWNER_ID
-      );
-      const nr_convidados_list = this.state.casamentos.nr_convidados.concat(
-        weddingData.data[idx].NUMBER_OF_GUESTS
-      );
-      const estilo_list = this.state.casamentos.estilo.concat(
-        weddingData.data[idx].STYLE
-      );
-      const date_list = this.state.casamentos.data.concat(
-        weddingData.data[idx].WEDDING_DATE
-      );
-
-      this.setState({
-        casamentos: {
-          id_cliente: id_owner_list,
-          id_casamento: id_casamento_list,
-          nr_convidados: nr_convidados_list,
-          estilo: estilo_list,
-          data: date_list
-        }
-      });
-    });
-
-    this.setState({
-      localData: {
-        data: today,
-        period: this.state.localData.period,
-        graphData: this.state.localData.graphData
-      }
-    });
+  getInvoiceForState(invoice_data) {
 
     const invoice_total_pending = invoice_data.filter(x => x.ACCEPTED != "TRUE")
       .length;
@@ -206,180 +187,286 @@ class TotalHeader extends Component {
       }, 0)
       .toLocaleString("pt-br", { style: "currency", currency: "BRL" });
 
-    this.setState({
-      invoices: {
-        total_register: invoice_total_pending + invoice_total_approved,
-        total_pending: invoice_total_pending,
-        total_approved: invoice_total_approved,
-        total_amount: invoice_total_amount,
-        data: invoice_data
-      }
+    return {
+      total_register: invoice_total_pending + invoice_total_approved,
+      total_pending: invoice_total_pending,
+      total_approved: invoice_total_approved,
+      total_amount: invoice_total_amount,
+      data: invoice_data
+    }
+  }
+  loadDatas() {
+
+    api.get("invoice").then((response) => {
+      this.setState({
+        invoices: this.getInvoiceForState(response.data)
+      });
     });
+
+    api.get("user").then((response) => {
+
+      const user_data = response.data;
+      var listId = [];
+      var dataList = [];
+
+      user_data.map((valor, idx) => {
+        listId = listId.concat(user_data[idx].ID);
+        dataList = dataList.concat(
+          user_data[idx].CREATED_AT
+        );
+      });
+
+      this.setState({
+        usuarios: {
+          id: listId,
+          data: dataList
+        }
+      }, () => {
+        this.filterDataChars(filterChars.Year);
+      });
+    });
+
+    api.get("wedding").then((response) => {
+      const wedding_data = response.data;
+
+      var id_casamento_list = [];
+      var id_owner_list = [];
+      var nr_convidados_list = [];
+      var estilo_list = [];
+      var date_list = [];
+
+      wedding_data.map((valor, idx) => {
+
+        id_casamento_list = id_casamento_list.concat(
+          wedding_data[idx].ID
+        );
+
+        id_owner_list = id_owner_list.concat(
+          wedding_data[idx].OWNER_ID
+        );
+
+        nr_convidados_list = nr_convidados_list.concat(
+          wedding_data[idx].NUMBER_OF_GUESTS
+        );
+
+        estilo_list = estilo_list.concat(
+          wedding_data[idx].STYLE
+        );
+
+        date_list = date_list.concat(
+          wedding_data[idx].WEDDING_DATE
+        );
+      });
+
+      this.setState({
+        casamentos: {
+          id_cliente: id_owner_list,
+          id_casamento: id_casamento_list,
+          nr_convidados: nr_convidados_list,
+          estilo: estilo_list,
+          data: date_list
+        }
+      }, () => {
+        this.filterDataChars(filterChars.Year);
+      });
+
+    });
+
+    //const weddingData = await api.get("wedding");
+    //const apointmentData = await api.get("appointment");
+    //const weddingFavorites = await api.get("wedding_favorites");
+
   };
 
-  updateGraphics = num => {
-    if (num === 1 || num === "1") {
-      var janeiro = 0;
-      var fevereiro = 0;
-      var marco = 0;
-      var abril = 0;
-      var mai = 0;
-      var jun = 0;
-      var jul = 0;
-      var ago = 0;
-      var sete = 0;
-      var out = 0;
-      var nov = 0;
-      var dez = 0;
-      this.state.casamentos.data.map((valor, idx) => {
-        let dateComparator = new Date(this.state.casamentos.data[idx]);
-        if (
-          dateComparator.getFullYear() ===
-          this.state.localData.data.getFullYear()
-        ) {
-          if (dateComparator.getMonth() === 0) {
-            janeiro++;
-          } else if (dateComparator.getMonth() === 1) {
-            fevereiro++;
-          } else if (dateComparator.getMonth() === 2) {
-            marco++;
-          } else if (dateComparator.getMonth() === 3) {
-            abril++;
-          } else if (dateComparator.getMonth() === 4) {
-            mai++;
-          } else if (dateComparator.getMonth() === 5) {
-            jun++;
-          } else if (dateComparator.getMonth() === 6) {
-            jul++;
-          } else if (dateComparator.getMonth() === 7) {
-            ago++;
-          } else if (dateComparator.getMonth() === 8) {
-            sete++;
-          } else if (dateComparator.getMonth() === 9) {
-            out++;
-          } else if (dateComparator.getMonth() === 10) {
-            nov++;
-          } else if (dateComparator.getMonth() === 11) {
-            dez++;
-          }
+  getItemsInMonth = (year, month, data) => {
+
+    var date = new Date(data);
+    return date.getFullYear() == year && date.getMonth() == month;
+  }
+
+  getItemsInDay = (year, dayOfYear, data) => {
+    var date = new Date(data);
+    var dataDayOfYear = getDayOfYear(date);
+    return date.getFullYear() == year && dataDayOfYear == dayOfYear;
+  }
+
+  updateMyChart(weddingTotalInMonths, period) {
+    this.setState({
+      localData: {
+        data: this.state.localData.data,
+        period: period,
+        graphData: {
+          usuarios: this.state.usuarios.data,
+          agendamento: weddingTotalInMonths
         }
-      });
-      var janUsuario = 0;
-      var fevUsuario = 0;
-      var marUsuario = 0;
-      var abrUsuario = 0;
-      var maiUsuario = 0;
-      var junUsuario = 0;
-      var julUsuario = 0;
-      var agoUsuaerio = 0;
-      var setUsuario = 0;
-      var outUsuario = 0;
-      var novUsuario = 0;
-      var dezUsuario = 0;
-      this.state.usuarios.data.map((valor, idx) => {
-        let dateComparator = new Date(this.state.usuarios.data[idx]);
-        if (
-          dateComparator.getFullYear() ===
-          this.state.localData.data.getFullYear()
-        ) {
-          if (dateComparator.getMonth() === 0) {
-            janUsuario++;
-          } else if (dateComparator.getMonth() === 1) {
-            fevUsuario++;
-          } else if (dateComparator.getMonth() === 2) {
-            marUsuario++;
-          } else if (dateComparator.getMonth() === 3) {
-            abrUsuario++;
-          } else if (dateComparator.getMonth() === 4) {
-            maiUsuario++;
-          } else if (dateComparator.getMonth() === 5) {
-            junUsuario++;
-          } else if (dateComparator.getMonth() === 6) {
-            julUsuario++;
-          } else if (dateComparator.getMonth() === 7) {
-            agoUsuaerio++;
-          } else if (dateComparator.getMonth() === 8) {
-            setUsuario++;
-          } else if (dateComparator.getMonth() === 9) {
-            outUsuario++;
-          } else if (dateComparator.getMonth() === 10) {
-            novUsuario++;
-          } else if (dateComparator.getMonth() === 11) {
-            dezUsuario++;
-          }
-        }
-        this.setState({
-          localData: {
-            data: this.state.localData.data,
-            period: [
-              "Janeiro",
-              "Fevereiro",
-              "Março",
-              "Abril",
-              "Junho",
-              "Julho",
-              "Agosto",
-              "Setembro",
-              "Outubro",
-              "Novembro",
-              "Dezembro"
-            ],
-            graphData: {
-              usuarios: [
-                janUsuario,
-                fevUsuario,
-                marUsuario,
-                abrUsuario,
-                maiUsuario,
-                junUsuario,
-                julUsuario,
-                agoUsuaerio,
-                setUsuario,
-                outUsuario,
-                novUsuario,
-                dezUsuario
-              ],
-              agendamento: [
-                janeiro,
-                fevereiro,
-                marco,
-                abril,
-                mai,
-                jun,
-                jul,
-                ago,
-                sete,
-                out,
-                nov,
-                dez
-              ]
-            }
-          },
-          usuarios: this.state.usuarios,
-          casamentos: this.state.casamentos
-        });
-      });
+      },
+      usuarios: this.state.usuarios,
+      casamentos: this.state.casamentos
+    }, () => {
 
       this.myChart.data.labels = this.state.localData.period;
-      this.usuariosChart.data.labels = this.state.localData.period;
-
-      this.myChart.data.datasets[0].data = this.state.localData.graphData.agendamento;
-      this.usuariosChart.data.datasets[0].data = this.state.localData.graphData.usuarios;
-
-      this.usuariosChart.update();
+      this.myChart.data.datasets[0].data = weddingTotalInMonths;
       this.myChart.update();
+    });
+
+  }
+
+  updateUsuariosChart = (usersTotalInMonths, period) => {
+    this.setState({
+      localData: {
+        data: this.state.localData.data,
+        period: period,
+        graphData: {
+          usuarios: usersTotalInMonths,
+          agendamento: this.state.casamentos.data
+        }
+      },
+      usuarios: this.state.usuarios,
+      casamentos: this.state.casamentos
+    }, () => {
+
+      this.usuariosChart.data.labels = this.state.localData.period;
+      this.usuariosChart.data.datasets[0].data = usersTotalInMonths;
+      this.usuariosChart.update();
+
+    });
+
+
+  }
+
+  filterDataChars = filterChar => {
+    var weddingTotalInMonths = [];
+    var usersTotalInMonths = [];
+    var period = [];
+    var dateNow = new Date();
+
+    switch (filterChar) {
+      case filterChars.Year:
+        period = monthsOfYear;
+        for (var i = 0; i < 12; i++) {
+          var valueMonthWedding = this
+            .state
+            .casamentos
+            .data
+            .filter(x => this.getItemsInMonth(dateNow.getFullYear(), i, x))
+            .length;
+
+          var valueMonthUsers = this
+            .state
+            .usuarios
+            .data
+            .filter(x => this.getItemsInMonth(dateNow.getFullYear(), i, x))
+            .length;
+
+          weddingTotalInMonths.push(valueMonthWedding);
+          usersTotalInMonths.push(valueMonthUsers);
+        }
+        break;
+      case filterChars.ThreeMonths:
+
+        for (var i = 3; i > 0; i--) {
+
+          var lastMonth = dateNow.getMonth() - i;
+          period.push(monthsOfYear[lastMonth]);
+
+          var valueMonthWedding = this
+            .state
+            .casamentos
+            .data
+            .filter(x => this.getItemsInMonth(dateNow.getFullYear(), lastMonth, x))
+            .length;
+
+          var valueMonthUsers = this
+            .state
+            .usuarios
+            .data
+            .filter(x => this.getItemsInMonth(dateNow.getFullYear(), lastMonth, x))
+            .length;
+
+          weddingTotalInMonths.push(valueMonthWedding);
+          usersTotalInMonths.push(valueMonthUsers);
+        }
+
+        break;
+      case filterChars.OneMonth:
+        var endDay = getDayOfYear(dateNow);
+        var startDay = endDay - 30;
+        var countIndex = 0;
+        for (var i = startDay; i < endDay; i++) {
+          countIndex++;
+          period.push(countIndex);
+
+          var valueMonthWedding = this
+            .state
+            .casamentos
+            .data
+            .filter(x => this.getItemsInDay(dateNow.getFullYear(), i, x))
+            .length;
+
+          var valueMonthUsers = this
+            .state
+            .usuarios
+            .data
+            .filter(x => this.getItemsInDay(dateNow.getFullYear(), i, x))
+            .length;
+
+          weddingTotalInMonths.push(valueMonthWedding);
+          usersTotalInMonths.push(valueMonthUsers);
+
+        }
+
+        break;
+      case filterChars.OneWeek:
+        var dayInWeek = getDayOfWeek(dateNow);
+        var endDay = getDayOfYear(dateNow);
+        var startDay = endDay - 8;
+
+        for (var i = startDay; i <= endDay; i++) {
+
+          period.push(dayOfWeek[dayInWeek]);
+
+          var valueMonthWedding = this
+            .state
+            .casamentos
+            .data
+            .filter(x => this.getItemsInDay(dateNow.getFullYear(), i, x))
+            .length;
+
+          var valueMonthUsers = this
+            .state
+            .usuarios
+            .data
+            .filter(x => this.getItemsInDay(dateNow.getFullYear(), i, x))
+            .length;
+
+          weddingTotalInMonths.push(valueMonthWedding);
+          usersTotalInMonths.push(valueMonthUsers);
+
+          if (dayInWeek >= 6) {
+            dayInWeek = 0;
+          } else if (dayInWeek >= 0) {
+            dayInWeek++;
+          } else if (dayInWeek < 0) {
+            dayInWeek--;
+          }
+        }
+
+        break;
     }
+
+    this.updateMyChart(weddingTotalInMonths, period);
+    this.updateUsuariosChart(usersTotalInMonths, period);
   };
 
   render() {
     return (
-     
+
       <div className="main">
         <div className="view-options">
-          <button>1 Semana</button>
-          <button>30 Dias</button>
-          <button>3 Meses</button>
-          <button onClick={() => this.updateGraphics(1)}>1 Ano</button>
+          <button onClick={() => this.filterDataChars(filterChars.OneWeek)}>1 Semana</button>
+          <button onClick={() => this.filterDataChars(filterChars.OneMonth)}>30 Dias</button>
+          <button onClick={() => this.filterDataChars(filterChars.ThreeMonths)}>3 Meses</button>
+          <button onClick={() => this.filterDataChars(filterChars.Year)}>1 Ano</button>
         </div>
         <div className="main-mini">
           <div class="mini-card">
@@ -424,7 +511,7 @@ class TotalHeader extends Component {
         </div>
         <div className="Divisor" />
       </div>
-     
+
     );
   }
 }
