@@ -3,17 +3,18 @@ import api from "../../Api.js";
 import Chart from "chart.js";
 import "./styles.css";
 import "../../Styles/root.css";
-import getDayOfYear from "date-fns/esm/fp/getDayOfYear"
-import getDayOfWeek from "date-fns/esm/fp/getDay"
-import graph_icon from '../../Images/graph-icon.svg'
+
+
+
 import lodash from 'lodash'
-
-import appointmentDatabase from '../../data/appointment.database.json'
-import invoiceDatabase from '../../data/invoice.database.json'
-import userDatabase from '../../data/user.database.json'
-import wenddingDatabase from '../../data/wendding.database.json'
-import wenddingFavoritesDatabase from '../../data/wendding-favorites.database.json'
-
+import getDayOfYear from "date-fns/esm/fp/getDayOfYear";
+import getDayOfWeek from "date-fns/esm/fp/getDay";
+import graph_icon from "../../Images/graph-icon.svg";
+import appointmentDatabase from "../../data/appointment.database.json";
+import invoiceDatabase from "../../data/invoice.database.json";
+import userDatabase from "../../data/user.database.json";
+import wenddingDatabase from "../../data/wendding.database.json";
+import wenddingFavoritesDatabase from "../../data/wendding-favorites.database.json";
 
 const monthsOfYear = [
   "Janeiro",
@@ -39,16 +40,12 @@ const dayOfWeek = [
   "Sábado"
 ];
 
-
-
 const filterChars = {
-  Year: '1 Ano',
-  ThreeMonths: '3 Meses',
-  OneMonth: '30 Dias',
-  OneWeek: '1 Semana'
-}
-
-
+  Year: "1 Ano",
+  ThreeMonths: "3 Meses",
+  OneMonth: "30 Dias",
+  OneWeek: "1 Semana"
+};
 
 class TotalHeader extends Component {
   constructor(props) {
@@ -70,8 +67,7 @@ class TotalHeader extends Component {
       },
       usuarios: {
         id: [],
-        data: [],
-
+        data: []
       },
       casamentos: {
         id_cliente: [],
@@ -95,7 +91,7 @@ class TotalHeader extends Component {
       total_invoices_register: 0,
       total__invoices_pending: 0,
       total_invoices_approved: 0,
-      total_invoices_amount: 0,
+      total_invoices_amount: 0
     };
   }
 
@@ -133,9 +129,7 @@ class TotalHeader extends Component {
       }
     });
 
-    var notasCtx = document
-      .getElementById("notasChart")
-      .getContext("2d");
+    var notasCtx = document.getElementById("notasChart").getContext("2d");
     this.notasChart = new Chart(notasCtx, {
       type: "doughnut",
       data: {
@@ -143,8 +137,16 @@ class TotalHeader extends Component {
         datasets: [
           {
             label: "1 ano",
-            data: [0],
-            backgroundColor: ["#EA8079", "#68bfb7", "#84b8e2"],
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            backgroundColor: [
+              "#EA8079",
+              "#68bfb7",
+              "#84b8e2",
+              "#FFB854",
+              "#DB5D79",
+              "#E2645A",
+              "#86D0CB"
+            ],
             borderColor: ["#E2645A"],
             borderWidth: 2
           }
@@ -193,7 +195,6 @@ class TotalHeader extends Component {
   }
 
   getInvoiceForState(invoice_data) {
-
     const invoice_total_pending = invoice_data.filter(x => x.ACCEPTED != "TRUE")
       .length;
     const invoice_total_approved = invoice_data.filter(
@@ -211,7 +212,7 @@ class TotalHeader extends Component {
       total_approved: invoice_total_approved,
       total_amount: invoice_total_amount,
       data: invoice_data
-    }
+    };
   }
 
   loadDatas() {
@@ -328,65 +329,65 @@ class TotalHeader extends Component {
   };
 
   getItemsInMonth = (year, month, data) => {
-
     var date = new Date(data);
     return date.getFullYear() == year && date.getMonth() == month;
-  }
+  };
 
   getItemsInDay = (year, dayOfYear, data) => {
     var date = new Date(data);
     var dataDayOfYear = getDayOfYear(date);
     return date.getFullYear() == year && dataDayOfYear == dayOfYear;
-  }
+  };
 
   updateAgendamentosChart(weddingTotalInMonths, period, filterChar) {
-    this.setState({
-      localData: {
-        data: this.state.localData.data,
-        period: period,
-        graphData: {
-          usuarios: this.state.usuarios.data,
-          agendamento: weddingTotalInMonths
-        }
+    this.setState(
+      {
+        localData: {
+          data: this.state.localData.data,
+          period: period,
+          graphData: {
+            usuarios: this.state.usuarios.data,
+            agendamento: weddingTotalInMonths
+          }
+        },
+        total_weddings: weddingTotalInMonths.reduce((sum, item) => {
+          return sum + item;
+        }, 0)
       },
-      total_weddings: weddingTotalInMonths.reduce((sum, item) => {
-        return sum + item;
-      }, 0)
-
-    }, () => {
-
-      this.agendamentosChart.data.labels = this.state.localData.period;
-      this.agendamentosChart.data.datasets[0].label = filterChar;
-      this.agendamentosChart.data.datasets[0].data = weddingTotalInMonths;
-      this.agendamentosChart.update();
-    });
-
+      () => {
+        this.agendamentosChart.data.labels = this.state.localData.period;
+        this.agendamentosChart.data.datasets[0].label = filterChar;
+        this.agendamentosChart.data.datasets[0].data = weddingTotalInMonths;
+        this.agendamentosChart.update();
+      }
+    );
   }
 
   updateUsuariosChart = (usersTotalInMonths, period, filterChar) => {
-    this.setState({
-      localData: {
-        data: this.state.localData.data,
-        period: period,
-        graphData: {
-          usuarios: usersTotalInMonths,
-          agendamento: this.state.casamentos.data
-        }
+    this.setState(
+      {
+        localData: {
+          data: this.state.localData.data,
+          period: period,
+          graphData: {
+            usuarios: usersTotalInMonths,
+            agendamento: this.state.casamentos.data
+          }
+        },
+        total_users: usersTotalInMonths.reduce((sum, item) => {
+          return sum + item;
+        }, 0)
       },
-      total_users: usersTotalInMonths.reduce((sum, item) => {
-        return sum + item;
-      }, 0)
-    }, () => {
-
-      this.usuariosChart.data.labels = this.state.localData.period;
-      this.usuariosChart.data.datasets[0].label = filterChar;
-      this.usuariosChart.data.datasets[0].data = usersTotalInMonths;
-      this.usuariosChart.update();
-    });
-  }
+      () => {
+        this.usuariosChart.data.labels = this.state.localData.period;
+        this.usuariosChart.data.datasets[0].label = filterChar;
+        this.usuariosChart.data.datasets[0].data = usersTotalInMonths;
+        this.usuariosChart.update();
+      }
+    );
+  };
 
   updateNotasChart = (notasTotalInMonths, period, filterChar) => {
-
     var invoices = this.getInvoiceForState(notasTotalInMonths);
     this.setState({
       invoices: this.state.invoices,
@@ -431,59 +432,45 @@ class TotalHeader extends Component {
       case filterChars.Year:
         period = monthsOfYear;
         for (var i = 0; i < 12; i++) {
-          var valueMonthWedding = this
-            .state
-            .casamentos
-            .data
-            .filter(x => this.getItemsInMonth(dateNow.getFullYear(), i, x))
-            .length;
+          var valueMonthWedding = this.state.casamentos.data.filter(x =>
+            this.getItemsInMonth(dateNow.getFullYear(), i, x)
+          ).length;
 
-          var valueMonthUsers = this
-            .state
-            .usuarios
-            .data
-            .filter(x => this.getItemsInMonth(dateNow.getFullYear(), i, x))
-            .length;
+          var valueMonthUsers = this.state.usuarios.data.filter(x =>
+            this.getItemsInMonth(dateNow.getFullYear(), i, x)
+          ).length;
 
-          var valueMonthInvoice = this
-            .state
-            .invoices
-            .data
-            .filter(x => this.getItemsInMonth(dateNow.getFullYear(), i, x.CREATED_AT));
+          var valueMonthInvoice = this.state.invoices.data.filter(x =>
+            this.getItemsInMonth(dateNow.getFullYear(), i, x.CREATED_AT)
+          );
 
-          invoicesTotalInMonths = invoicesTotalInMonths.concat(valueMonthInvoice);
+          invoicesTotalInMonths = invoicesTotalInMonths.concat(
+            valueMonthInvoice
+          );
           weddingTotalInMonths.push(valueMonthWedding);
           usersTotalInMonths.push(valueMonthUsers);
         }
         break;
       case filterChars.ThreeMonths:
-
         for (var i = 3; i > 0; i--) {
-
           var lastMonth = dateNow.getMonth() - i;
           period.push(monthsOfYear[lastMonth]);
 
-          var valueMonthWedding = this
-            .state
-            .casamentos
-            .data
-            .filter(x => this.getItemsInMonth(dateNow.getFullYear(), lastMonth, x))
-            .length;
+          var valueMonthWedding = this.state.casamentos.data.filter(x =>
+            this.getItemsInMonth(dateNow.getFullYear(), lastMonth, x)
+          ).length;
 
-          var valueMonthUsers = this
-            .state
-            .usuarios
-            .data
-            .filter(x => this.getItemsInMonth(dateNow.getFullYear(), lastMonth, x))
-            .length;
+          var valueMonthUsers = this.state.usuarios.data.filter(x =>
+            this.getItemsInMonth(dateNow.getFullYear(), lastMonth, x)
+          ).length;
 
-          var valueMonthInvoice = this
-            .state
-            .invoices
-            .data
-            .filter(x => this.getItemsInMonth(dateNow.getFullYear(), lastMonth, x.CREATED_AT));
+          var valueMonthInvoice = this.state.invoices.data.filter(x =>
+            this.getItemsInMonth(dateNow.getFullYear(), lastMonth, x.CREATED_AT)
+          );
 
-          invoicesTotalInMonths = invoicesTotalInMonths.concat(valueMonthInvoice);
+          invoicesTotalInMonths = invoicesTotalInMonths.concat(
+            valueMonthInvoice
+          );
           weddingTotalInMonths.push(valueMonthWedding);
           usersTotalInMonths.push(valueMonthUsers);
         }
@@ -497,31 +484,24 @@ class TotalHeader extends Component {
           countIndex++;
           period.push(countIndex);
 
-          var valueMonthWedding = this
-            .state
-            .casamentos
-            .data
-            .filter(x => this.getItemsInDay(dateNow.getFullYear(), i, x))
-            .length;
+          var valueMonthWedding = this.state.casamentos.data.filter(x =>
+            this.getItemsInDay(dateNow.getFullYear(), i, x)
+          ).length;
 
-          var valueMonthUsers = this
-            .state
-            .usuarios
-            .data
-            .filter(x => this.getItemsInDay(dateNow.getFullYear(), i, x))
-            .length;
+          var valueMonthUsers = this.state.usuarios.data.filter(x =>
+            this.getItemsInDay(dateNow.getFullYear(), i, x)
+          ).length;
 
-          var valueMonthInvoice = this
-            .state
-            .invoices
-            .data
-            .filter(x => this.getItemsInDay(dateNow.getFullYear(), i, x.CREATED_AT));
+          var valueMonthInvoice = this.state.invoices.data.filter(x =>
+            this.getItemsInDay(dateNow.getFullYear(), i, x.CREATED_AT)
+          );
 
-          invoicesTotalInMonths = invoicesTotalInMonths.concat(valueMonthInvoice);
+          invoicesTotalInMonths = invoicesTotalInMonths.concat(
+            valueMonthInvoice
+          );
 
           weddingTotalInMonths.push(valueMonthWedding);
           usersTotalInMonths.push(valueMonthUsers);
-
         }
 
         break;
@@ -531,30 +511,23 @@ class TotalHeader extends Component {
         var startDay = endDay - 8;
 
         for (var i = startDay; i <= endDay; i++) {
-
           period.push(dayOfWeek[dayInWeek]);
 
-          var valueMonthWedding = this
-            .state
-            .casamentos
-            .data
-            .filter(x => this.getItemsInDay(dateNow.getFullYear(), i, x))
-            .length;
+          var valueMonthWedding = this.state.casamentos.data.filter(x =>
+            this.getItemsInDay(dateNow.getFullYear(), i, x)
+          ).length;
 
-          var valueMonthUsers = this
-            .state
-            .usuarios
-            .data
-            .filter(x => this.getItemsInDay(dateNow.getFullYear(), i, x))
-            .length;
+          var valueMonthUsers = this.state.usuarios.data.filter(x =>
+            this.getItemsInDay(dateNow.getFullYear(), i, x)
+          ).length;
 
-          var valueMonthInvoice = this
-            .state
-            .invoices
-            .data
-            .filter(x => this.getItemsInDay(dateNow.getFullYear(), i, x.CREATED_AT));
+          var valueMonthInvoice = this.state.invoices.data.filter(x =>
+            this.getItemsInDay(dateNow.getFullYear(), i, x.CREATED_AT)
+          );
 
-          invoicesTotalInMonths = invoicesTotalInMonths.concat(valueMonthInvoice);
+          invoicesTotalInMonths = invoicesTotalInMonths.concat(
+            valueMonthInvoice
+          );
 
           weddingTotalInMonths.push(valueMonthWedding);
           usersTotalInMonths.push(valueMonthUsers);
@@ -574,24 +547,31 @@ class TotalHeader extends Component {
     this.updateAgendamentosChart(weddingTotalInMonths, period, filterChar);
     this.updateUsuariosChart(usersTotalInMonths, period, filterChar);
     this.updateNotasChart(invoicesTotalInMonths, period, filterChar);
-
-
   };
 
   render() {
     return (
-
       <div className="main">
-        <div className='main-wrapper'>
-          <div className='inputHeader'>
-            <img src={graph_icon} alt=''></img>
+        <div className="main-wrapper">
+          <div className="inputHeader">
+            <img src={graph_icon} alt="" />
             <h1>Resumo por: {this.state.filterEnable}</h1>
           </div>
           <div className="view-options">
-            <button onClick={() => this.filterDataChars(filterChars.OneWeek)}>1 Semana</button>
-            <button onClick={() => this.filterDataChars(filterChars.OneMonth)}>30 Dias</button>
-            <button onClick={() => this.filterDataChars(filterChars.ThreeMonths)}>3 Meses</button>
-            <button onClick={() => this.filterDataChars(filterChars.Year)}>1 Ano</button>
+            <button onClick={() => this.filterDataChars(filterChars.OneWeek)}>
+              1 Semana
+            </button>
+            <button onClick={() => this.filterDataChars(filterChars.OneMonth)}>
+              30 Dias
+            </button>
+            <button
+              onClick={() => this.filterDataChars(filterChars.ThreeMonths)}
+            >
+              3 Meses
+            </button>
+            <button onClick={() => this.filterDataChars(filterChars.Year)}>
+              1 Ano
+            </button>
           </div>
         </div>
         <div className="main-mini">
@@ -637,7 +617,6 @@ class TotalHeader extends Component {
         </div>
         <div className="Divisor" />
       </div>
-
     );
   }
 }
