@@ -33,11 +33,14 @@ const dayOfWeek = [
 
 
 const filterChars = {
-  Year: 'year',
-  ThreeMonths: 'threeMonths',
-  OneMonth: 'oneMonth',
-  OneWeek: 'oneWeek'
+  Year: '1 Ano',
+  ThreeMonths: '3 Meses',
+  OneMonth: '30 Dias',
+  OneWeek: '1 Semana'
 }
+
+
+
 class TotalHeader extends Component {
   constructor(props) {
     super();
@@ -47,6 +50,7 @@ class TotalHeader extends Component {
     };
 
     this.state = {
+      filterEnable: "1 Ano",
       localData: {
         data: [],
         period: [],
@@ -94,7 +98,7 @@ class TotalHeader extends Component {
         labels: monthsOfYear,
         datasets: [
           {
-            label: "Agendamentos - 1 ano",
+            label: "1 ano",
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             backgroundColor: ["#EA8079"],
             borderColor: ["#E2645A"],
@@ -152,7 +156,7 @@ class TotalHeader extends Component {
         labels: monthsOfYear,
         datasets: [
           {
-            label: "Usuários - 1 ano",
+            label: "1 ano",
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             backgroundColor: ["#86D0CB"],
             borderColor: ["#68BFB7"],
@@ -290,7 +294,7 @@ class TotalHeader extends Component {
     return date.getFullYear() == year && dataDayOfYear == dayOfYear;
   }
 
-  updateMyChart(weddingTotalInMonths, period) {
+  updateMyChart(weddingTotalInMonths, period, filterChar) {
     this.setState({
       localData: {
         data: this.state.localData.data,
@@ -305,13 +309,14 @@ class TotalHeader extends Component {
     }, () => {
 
       this.myChart.data.labels = this.state.localData.period;
+      this.myChart.data.datasets[0].label = filterChar;      
       this.myChart.data.datasets[0].data = weddingTotalInMonths;
       this.myChart.update();
     });
 
   }
 
-  updateUsuariosChart = (usersTotalInMonths, period) => {
+  updateUsuariosChart = (usersTotalInMonths, period, filterChar) => {
     this.setState({
       localData: {
         data: this.state.localData.data,
@@ -326,6 +331,7 @@ class TotalHeader extends Component {
     }, () => {
 
       this.usuariosChart.data.labels = this.state.localData.period;
+      this.usuariosChart.data.datasets[0].label = filterChar;   
       this.usuariosChart.data.datasets[0].data = usersTotalInMonths;
       this.usuariosChart.update();
 
@@ -339,6 +345,8 @@ class TotalHeader extends Component {
     var usersTotalInMonths = [];
     var period = [];
     var dateNow = new Date();
+    
+    this.state.filterEnable = filterChar;
 
     switch (filterChar) {
       case filterChars.Year:
@@ -454,8 +462,8 @@ class TotalHeader extends Component {
         break;
     }
 
-    this.updateMyChart(weddingTotalInMonths, period);
-    this.updateUsuariosChart(usersTotalInMonths, period);
+    this.updateMyChart(weddingTotalInMonths, period, filterChar);
+    this.updateUsuariosChart(usersTotalInMonths, period, filterChar);
   };
 
   render() {
@@ -465,7 +473,7 @@ class TotalHeader extends Component {
         <div className='main-wrapper'>
           <div className='inputHeader'>
             <img src={graph_icon} alt=''></img>
-            <h1>Últimos Usuários</h1>
+            <h1>Resumo por: {this.state.filterEnable}</h1>
           </div>
           <div className="view-options">
             <button onClick={() => this.filterDataChars(filterChars.OneWeek)}>1 Semana</button>
@@ -503,15 +511,15 @@ class TotalHeader extends Component {
         </div>
         <div className="main-big">
           <div className="big-chart">
-            <strong>Gráficos de Agendamentos</strong>
+            <strong>Agendamentos</strong>
             <canvas id="agendamentosChart" width="100" height="100" />
           </div>
           <div className="big-chart">
-            <strong>Gráficos de Usuários</strong>
+            <strong>Usuários</strong>
             <canvas id="usuariosChart" width="100" height="100" />
           </div>
           <div className="big-chart">
-            <strong>Ranking de Estilos</strong>
+            <strong>Categorias vs Notas</strong>
             <canvas id="fornecedoresChart" width="100" height="100" />
           </div>
         </div>
