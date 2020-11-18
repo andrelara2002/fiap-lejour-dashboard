@@ -6,6 +6,14 @@ import "../../Styles/root.css";
 import getDayOfYear from "date-fns/esm/fp/getDayOfYear"
 import getDayOfWeek from "date-fns/esm/fp/getDay"
 import graph_icon from '../../Images/graph-icon.svg'
+
+import appointmentDatabase from '../../data/appointment.database.json'
+import invoiceDatabase from '../../data/invoice.database.json'
+import userDatabase from '../../data/user.database.json'
+import wenddingDatabase from '../../data/wendding.database.json'
+import wenddingFavoritesDatabase from '../../data/wendding-favorites.database.json'
+
+
 const monthsOfYear = [
   "Janeiro",
   "Fevereiro",
@@ -94,6 +102,7 @@ class TotalHeader extends Component {
 
     this.buildChars();
     this.loadDatas();
+    //this.loadDatasFake();
   }
 
 
@@ -206,6 +215,7 @@ class TotalHeader extends Component {
       data: invoice_data
     }
   }
+  
   loadDatas() {
 
     api.get("invoice").then((response) => {
@@ -244,6 +254,99 @@ class TotalHeader extends Component {
     });
 
     api.get("wedding").then((response) => {
+      const wedding_data = response.data;
+
+      var id_casamento_list = [];
+      var id_owner_list = [];
+      var nr_convidados_list = [];
+      var estilo_list = [];
+      var date_list = [];
+
+      wedding_data.map((valor, idx) => {
+
+        id_casamento_list = id_casamento_list.concat(
+          wedding_data[idx].ID
+        );
+
+        id_owner_list = id_owner_list.concat(
+          wedding_data[idx].OWNER_ID
+        );
+
+        nr_convidados_list = nr_convidados_list.concat(
+          wedding_data[idx].NUMBER_OF_GUESTS
+        );
+
+        estilo_list = estilo_list.concat(
+          wedding_data[idx].STYLE
+        );
+
+        date_list = date_list.concat(
+          wedding_data[idx].WEDDING_DATE
+        );
+      });
+
+      this.setState({
+        casamentos: {
+          id_cliente: id_owner_list,
+          id_casamento: id_casamento_list,
+          nr_convidados: nr_convidados_list,
+          estilo: estilo_list,
+          data: date_list
+        },
+        total_weddings: date_list
+      }, () => {
+        this.filterDataChars(filterChars.Year);
+      });
+
+    });
+
+    //const weddingData = await api.get("wedding");
+    //const apointmentData = await api.get("appointment");
+    //const weddingFavorites = await api.get("wedding_favorites");
+
+  };
+
+  loadDatasFake() {
+
+    api.get("invoice").catch((response) => {
+      console.log("entrou");
+      response.data = invoiceDatabase;
+      var invoices = this.getInvoiceForState(response.data);
+      this.setState({
+        invoices: invoices,
+        total_invoices_register: invoices.total_register,
+        total__invoices_pending: invoices.total_pending,
+        total_invoices_approved: invoices.total_approved,
+        total_invoices_amount: invoices.total_amount,
+      });
+    });
+
+    api.get("user").catch((response) => {
+      response.data = userDatabase;
+      const user_data = response.data;
+      var listId = [];
+      var dataList = [];
+
+      user_data.map((valor, idx) => {
+        listId = listId.concat(user_data[idx].ID);
+        dataList = dataList.concat(
+          user_data[idx].CREATED_AT
+        );
+      });
+
+      this.setState({
+        usuarios: {
+          id: listId,
+          data: dataList
+        },
+        total_users: dataList.length
+      }, () => {
+        this.filterDataChars(filterChars.Year);
+      });
+    });
+
+    api.get("wedding").catch((response) => {
+      response.data = wenddingDatabase;
       const wedding_data = response.data;
 
       var id_casamento_list = [];
@@ -363,19 +466,14 @@ class TotalHeader extends Component {
       total__invoices_pending: invoices.total_pending,
       total_invoices_approved: invoices.total_approved,
       total_invoices_amount: invoices.total_amount,
-    });
-
-    this.setState({
-      total_users: notasTotalInMonths.reduce((sum, item) => {
-        return sum + item;
-      }, 0)
-    }, () => {
+    },
+    () => {
 
       this.notasChart.data.labels = this.state.localData.period;
       this.notasChart.data.datasets[0].label = filterChar;
       this.notasChart.data.datasets[0].data = notasTotalInMonths;
       this.notasChart.update();
-    });
+    });   
   }
 
   filterDataChars = filterChar => {
