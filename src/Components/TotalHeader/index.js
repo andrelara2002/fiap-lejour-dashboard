@@ -62,7 +62,7 @@ class TotalHeader extends Component {
       usuarios: {
         id: [],
         data: [],
-        
+
       },
       casamentos: {
         id_cliente: [],
@@ -209,8 +209,13 @@ class TotalHeader extends Component {
   loadDatas() {
 
     api.get("invoice").then((response) => {
+      var invoices = this.getInvoiceForState(response.data);
       this.setState({
-        invoices: this.getInvoiceForState(response.data)
+        invoices: invoices,
+        total_invoices_register: invoices.total_register,
+        total__invoices_pending: invoices.total_pending,
+        total_invoices_approved: invoices.total_approved,
+        total_invoices_amount: invoices.total_amount,
       });
     });
 
@@ -230,7 +235,7 @@ class TotalHeader extends Component {
       this.setState({
         usuarios: {
           id: listId,
-          data: dataList          
+          data: dataList
         },
         total_users: dataList.length
       }, () => {
@@ -316,11 +321,11 @@ class TotalHeader extends Component {
       total_weddings: weddingTotalInMonths.reduce((sum, item) => {
         return sum + item;
       }, 0)
-      
+
     }, () => {
 
       this.myChart.data.labels = this.state.localData.period;
-      this.myChart.data.datasets[0].label = filterChar;      
+      this.myChart.data.datasets[0].label = filterChar;
       this.myChart.data.datasets[0].data = weddingTotalInMonths;
       this.myChart.update();
     });
@@ -343,7 +348,7 @@ class TotalHeader extends Component {
     }, () => {
 
       this.usuariosChart.data.labels = this.state.localData.period;
-      this.usuariosChart.data.datasets[0].label = filterChar;   
+      this.usuariosChart.data.datasets[0].label = filterChar;
       this.usuariosChart.data.datasets[0].data = usersTotalInMonths;
       this.usuariosChart.update();
     });
@@ -352,9 +357,10 @@ class TotalHeader extends Component {
   filterDataChars = filterChar => {
     var weddingTotalInMonths = [];
     var usersTotalInMonths = [];
+    var invoicesTotalInMonths = [];
     var period = [];
     var dateNow = new Date();
-    
+
     this.state.filterEnable = filterChar;
 
     switch (filterChar) {
@@ -375,6 +381,13 @@ class TotalHeader extends Component {
             .filter(x => this.getItemsInMonth(dateNow.getFullYear(), i, x))
             .length;
 
+          var valueMonthInvoice = this
+            .state
+            .invoices
+            .data
+            .filter(x => this.getItemsInMonth(dateNow.getFullYear(), i, x.CREATED_AT));
+
+          invoicesTotalInMonths = invoicesTotalInMonths.concat(valueMonthInvoice);
           weddingTotalInMonths.push(valueMonthWedding);
           usersTotalInMonths.push(valueMonthUsers);
         }
@@ -400,6 +413,13 @@ class TotalHeader extends Component {
             .filter(x => this.getItemsInMonth(dateNow.getFullYear(), lastMonth, x))
             .length;
 
+          var valueMonthInvoice = this
+            .state
+            .invoices
+            .data
+            .filter(x => this.getItemsInMonth(dateNow.getFullYear(), lastMonth, x.CREATED_AT));
+
+          invoicesTotalInMonths = invoicesTotalInMonths.concat(valueMonthInvoice);
           weddingTotalInMonths.push(valueMonthWedding);
           usersTotalInMonths.push(valueMonthUsers);
         }
@@ -426,6 +446,14 @@ class TotalHeader extends Component {
             .data
             .filter(x => this.getItemsInDay(dateNow.getFullYear(), i, x))
             .length;
+
+          var valueMonthInvoice = this
+            .state
+            .invoices
+            .data
+            .filter(x => this.getItemsInDay(dateNow.getFullYear(), i, x.CREATED_AT));
+
+          invoicesTotalInMonths = invoicesTotalInMonths.concat(valueMonthInvoice);
 
           weddingTotalInMonths.push(valueMonthWedding);
           usersTotalInMonths.push(valueMonthUsers);
@@ -456,6 +484,14 @@ class TotalHeader extends Component {
             .filter(x => this.getItemsInDay(dateNow.getFullYear(), i, x))
             .length;
 
+          var valueMonthInvoice = this
+            .state
+            .invoices
+            .data
+            .filter(x => this.getItemsInDay(dateNow.getFullYear(), i, x.CREATED_AT));
+
+          invoicesTotalInMonths = invoicesTotalInMonths.concat(valueMonthInvoice);
+
           weddingTotalInMonths.push(valueMonthWedding);
           usersTotalInMonths.push(valueMonthUsers);
 
@@ -473,6 +509,16 @@ class TotalHeader extends Component {
 
     this.updateMyChart(weddingTotalInMonths, period, filterChar);
     this.updateUsuariosChart(usersTotalInMonths, period, filterChar);
+
+    var invoices = this.getInvoiceForState(invoicesTotalInMonths);
+    this.setState({
+      invoices: this.state.invoices,
+      total_invoices_register: invoices.total_register,
+      total__invoices_pending: invoices.total_pending,
+      total_invoices_approved: invoices.total_approved,
+      total_invoices_amount: invoices.total_amount,
+    });
+
   };
 
   render() {
@@ -495,7 +541,7 @@ class TotalHeader extends Component {
           <div className="mini-card">
             <strong>Usuários</strong>
             <h1>{this.state.total_users}</h1>
-            <p>+22%</p>
+            <p>+12%</p>
           </div>
           <div className="mini-card">
             <strong>Agendamentos</strong>
@@ -504,25 +550,25 @@ class TotalHeader extends Component {
           </div>
           <div className="mini-card">
             <strong>Pendentes</strong>
-            <h1>{this.state.invoices.total_pending}</h1>
-            <p>+22%</p>
+            <h1>{this.state.total__invoices_pending}</h1>
+            <p>+30%</p>
           </div>
           <div className="mini-card">
             <strong>Aprovados</strong>
-            <h1>{this.state.invoices.total_approved}</h1>
-            <p>+22%</p>
+            <h1>{this.state.total_invoices_approved}</h1>
+            <p>+40%</p>
           </div>
           <div className="mini-card">
             <strong>Total</strong>
-            <h1>{this.state.invoices.total_amount}</h1>
-            <p>+22%</p>
+            <h1>{this.state.total_invoices_amount}</h1>
+            <p>+50%</p>
           </div>
         </div>
         <div className="main-big">
-        <div className="big-chart">
+          <div className="big-chart">
             <strong>Usuários</strong>
             <canvas id="usuariosChart" width="100" height="100" />
-          </div>          
+          </div>
           <div className="big-chart">
             <strong>Agendamentos</strong>
             <canvas id="agendamentosChart" width="100" height="100" />
