@@ -23,15 +23,29 @@ h1 {
   color: var(--primary-text-color);
 }
 p {
+  font-family: 'Lato', sans-serif;
   color: var(--verde-agua-escuro);
 }
 h1,
 p {
   transition: 300ms;
   margin: 0;
-  font-family: sans-serif;
+  font-family: 'Lato', sans-serif;
 }
 strong {
   color: var(--secondary-text-color);
-  font: 700 1rem sans-serif;
+  font: 700 1rem 'Lato', sans-serif;
+}
+
+.main-wrapper{
+  margin-top: 2rem;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.main-wrapper h1{
+  font-family: 'Merriweather', serif;;
+  padding-left: 1rem;
+  border-left: 3px solid var(--verde-agua-escuro);
 }

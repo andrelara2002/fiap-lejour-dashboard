@@ -5,6 +5,9 @@ import api from "../../Api.js";
 import "../../Styles/root.css";
 
 import search_icon from '../../Images/search-icon.svg'
+import wedding_icon from '../../Images/wedding-icon.svg'
+import user_icon from '../../Images/user-icon.svg'
+import agendamentos_icon from '../../Images/agendamentos-icon.svg'
 
 class DetalhesComponent extends Component {
   constructor(props) {
@@ -231,7 +234,10 @@ class DetalhesComponent extends Component {
         <div className="last">
           <div className="big-card">
             <div className="mini-header">
-              <h1>Últimos Agendamentos</h1>
+              <div className='inputHeader'>
+                <img src={wedding_icon} alt=''></img>
+                <h1>Últimos Agendamentos</h1>
+              </div>
               <div className='search-div'>
                 <input />
                 <button><img src={search_icon} alt='pesquisar' /></button>
@@ -250,7 +256,10 @@ class DetalhesComponent extends Component {
           </div>
           <div className="big-card" id="card_usuarios">
             <div className="mini-header">
-              <h1>Últimos Usuários</h1>
+              <div className='inputHeader'>
+                <img src={user_icon} alt=''></img>
+                <h1>Últimos Usuários</h1>
+              </div>
               <div className='search-div'>
                 <input />
                 <button><img src={search_icon} alt='pesquisar' /></button>
@@ -268,7 +277,10 @@ class DetalhesComponent extends Component {
         <div className="StatusAgendamento">
           <div className="big-card">
             <div className="mini-header">
-              <h1>Status de Agendamentos</h1>
+              <div className='inputHeader'>
+                <img src={agendamentos_icon} alt=''></img>
+                <h1>Status de Agendamentos</h1>
+              </div>
               <div className='search-div'>
                 <input />
                 <button><img src={search_icon} alt='pesquisar' /></button>

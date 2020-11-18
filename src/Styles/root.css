@@ -7,6 +7,7 @@
 
   --verde-agua-escuro: #68bfb7;
   --ceu-azul: #84b8e2;
+  --pink: #DB5D79;
 
   --normal-shadow: 0px 3px 10px rgba(88, 88, 88, 0.1),
     0px 16px 31px rgba(88, 88, 88, 0.1);
@@ -58,7 +59,7 @@
   transition: 300ms;
   border-radius: 2rem;
 
-  padding: 1rem;
+  padding: 1.4rem;
   margin: 1rem;
 
   box-shadow: var(--normal-shadow);
@@ -82,6 +83,8 @@ button {
 
   background: linear-gradient(263.69deg, #84b8e2 -5.62%, #86d0cb 77.09%);
   box-shadow: var(--buttom-shadow);
+
+  font: 300 1rem 'Lato', sans-serif;;
 }
 
 button:hover {
@@ -90,6 +93,8 @@ button:hover {
 
   opacity: 0.8;
   cursor: pointer;
+
+  background: linear-gradient(263.69deg, #84b8e2 -5.62%, #84b8e2 77.09%); ;
 }
 
 button:focus {
@@ -97,8 +102,6 @@ button:focus {
 }
 
 .mini-header {
-  margin: 0 1rem;
-  padding: 0 1rem;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -106,9 +109,12 @@ button:focus {
 }
 
 .mini-header h1 {
+  font-family: 'Merriweather', serif;
   text-align: start;
   margin: 1rem auto;
-  font-size: 1.2rem;
+  padding: 0 1rem;
+  border-left: 3px solid var(--verde-agua-escuro);
+  font-size: 1.4rem;
 }
 
 input {
@@ -119,7 +125,7 @@ input {
   border-radius: 2rem;
 
   text-align: center;
-  font: 300 1rem var(--primary-text-color);
+  font: 300 1.2rem 'Lato', sans-serif;
   box-shadow: var(--hover-shadow);
   border: 2px solid lightgrey;
 }
@@ -127,12 +133,21 @@ input {
 input:focus {
   transition: 300ms;
   outline: none;
-  box-shadow: var(--buttom-shadow);
-  border-color: rgba(134, 208, 203, 1);
 }
 
 .Divisor {
   width: 100%;
   margin: 1rem 0;
   border-bottom: 1px solid #eeeeee;
+}
+
+
+.inputHeader{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+}
+.inputHeader img{
+  margin-right: 1rem;
 }

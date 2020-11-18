@@ -8,7 +8,6 @@ class Header extends Component {
     return (
       <div className="header">
         <a href="https://painel.lejour.com.br/buscar"><img src={lejourLogo} alt="Lejour" /></a>
-        <h1> Dashboard </h1>
         <a href="https://painel.lejour.com.br/login"> <button id="red-button"> Sair</button></a>
       </div>
     );

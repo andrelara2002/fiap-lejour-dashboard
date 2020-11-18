@@ -21,13 +21,20 @@ html {
 }
 
 img {
-  width: 3rem;
+  width: 2.6rem;
 }
 
 #red-button {
   font-size: 1rem;
   padding: 0.6rem 3rem;
+  box-shadow: none;
 
-  background: var(--button-red-color);
-  box-shadow: var(--button-red-shadow);
+  border: 2px solid var(--pink);
+  color: var(--pink);
+  background: none;
+}
+
+#red-button:hover{
+  border-color: var(--ceu-azul);
+  color: var(--ceu-azul);
 }

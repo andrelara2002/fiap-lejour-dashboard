@@ -5,7 +5,7 @@ import "./styles.css";
 import "../../Styles/root.css";
 import getDayOfYear from "date-fns/esm/fp/getDayOfYear"
 import getDayOfWeek from "date-fns/esm/fp/getDay"
-
+import graph_icon from '../../Images/graph-icon.svg'
 const monthsOfYear = [
   "Janeiro",
   "Fevereiro",
@@ -462,11 +462,17 @@ class TotalHeader extends Component {
     return (
 
       <div className="main">
-        <div className="view-options">
-          <button onClick={() => this.filterDataChars(filterChars.OneWeek)}>1 Semana</button>
-          <button onClick={() => this.filterDataChars(filterChars.OneMonth)}>30 Dias</button>
-          <button onClick={() => this.filterDataChars(filterChars.ThreeMonths)}>3 Meses</button>
-          <button onClick={() => this.filterDataChars(filterChars.Year)}>1 Ano</button>
+        <div className='main-wrapper'>
+          <div className='inputHeader'>
+            <img src={graph_icon} alt=''></img>
+            <h1>Últimos Usuários</h1>
+          </div>
+          <div className="view-options">
+            <button onClick={() => this.filterDataChars(filterChars.OneWeek)}>1 Semana</button>
+            <button onClick={() => this.filterDataChars(filterChars.OneMonth)}>30 Dias</button>
+            <button onClick={() => this.filterDataChars(filterChars.ThreeMonths)}>3 Meses</button>
+            <button onClick={() => this.filterDataChars(filterChars.Year)}>1 Ano</button>
+          </div>
         </div>
         <div className="main-mini">
           <div class="mini-card">
