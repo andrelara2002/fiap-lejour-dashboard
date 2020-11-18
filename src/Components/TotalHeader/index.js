@@ -99,7 +99,7 @@ class TotalHeader extends Component {
 
   buildChars() {
     var ctx = document.getElementById("agendamentosChart").getContext("2d");
-    this.myChart = new Chart(ctx, {
+    this.agendamentosChart = new Chart(ctx, {
       type: "line",
       data: {
         labels: monthsOfYear,
@@ -126,17 +126,17 @@ class TotalHeader extends Component {
       }
     });
 
-    var fornecedoresCtx = document
-      .getElementById("fornecedoresChart")
+    var notasCtx = document
+      .getElementById("notasChart")
       .getContext("2d");
-    this.fornecedoresChart = new Chart(fornecedoresCtx, {
+    this.notasChart = new Chart(notasCtx, {
       type: "doughnut",
       data: {
-        labels: ["Madeira", "Pedra", "Água"],
+        labels: monthsOfYear,
         datasets: [
           {
-            label: "Ranking de Estilos",
-            data: [10, 40, 50],
+            label: "1 ano",
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             backgroundColor: ["#EA8079", "#68bfb7", "#84b8e2"],
             borderColor: ["#E2645A"],
             borderWidth: 2
@@ -308,7 +308,7 @@ class TotalHeader extends Component {
     return date.getFullYear() == year && dataDayOfYear == dayOfYear;
   }
 
-  updateMyChart(weddingTotalInMonths, period, filterChar) {
+  updateAgendamentosChart(weddingTotalInMonths, period, filterChar) {
     this.setState({
       localData: {
         data: this.state.localData.data,
@@ -324,10 +324,10 @@ class TotalHeader extends Component {
 
     }, () => {
 
-      this.myChart.data.labels = this.state.localData.period;
-      this.myChart.data.datasets[0].label = filterChar;
-      this.myChart.data.datasets[0].data = weddingTotalInMonths;
-      this.myChart.update();
+      this.agendamentosChart.data.labels = this.state.localData.period;
+      this.agendamentosChart.data.datasets[0].label = filterChar;
+      this.agendamentosChart.data.datasets[0].data = weddingTotalInMonths;
+      this.agendamentosChart.update();
     });
 
   }
@@ -351,6 +351,30 @@ class TotalHeader extends Component {
       this.usuariosChart.data.datasets[0].label = filterChar;
       this.usuariosChart.data.datasets[0].data = usersTotalInMonths;
       this.usuariosChart.update();
+    });
+  }
+
+  updateNotasChart = (notasTotalInMonths, period, filterChar) => {
+
+    var invoices = this.getInvoiceForState(notasTotalInMonths);
+    this.setState({
+      invoices: this.state.invoices,
+      total_invoices_register: invoices.total_register,
+      total__invoices_pending: invoices.total_pending,
+      total_invoices_approved: invoices.total_approved,
+      total_invoices_amount: invoices.total_amount,
+    });
+
+    this.setState({
+      total_users: notasTotalInMonths.reduce((sum, item) => {
+        return sum + item;
+      }, 0)
+    }, () => {
+
+      this.notasChart.data.labels = this.state.localData.period;
+      this.notasChart.data.datasets[0].label = filterChar;
+      this.notasChart.data.datasets[0].data = notasTotalInMonths;
+      this.notasChart.update();
     });
   }
 
@@ -507,17 +531,10 @@ class TotalHeader extends Component {
         break;
     }
 
-    this.updateMyChart(weddingTotalInMonths, period, filterChar);
+    this.updateAgendamentosChart(weddingTotalInMonths, period, filterChar);
     this.updateUsuariosChart(usersTotalInMonths, period, filterChar);
+    this.updateNotasChart(invoicesTotalInMonths, period, filterChar);
 
-    var invoices = this.getInvoiceForState(invoicesTotalInMonths);
-    this.setState({
-      invoices: this.state.invoices,
-      total_invoices_register: invoices.total_register,
-      total__invoices_pending: invoices.total_pending,
-      total_invoices_approved: invoices.total_approved,
-      total_invoices_amount: invoices.total_amount,
-    });
 
   };
 
@@ -575,7 +592,7 @@ class TotalHeader extends Component {
           </div>
           <div className="big-chart">
             <strong>Categorias vs Notas</strong>
-            <canvas id="fornecedoresChart" width="100" height="100" />
+            <canvas id="notasChart" width="100" height="100" />
           </div>
         </div>
         <div className="Divisor" />
