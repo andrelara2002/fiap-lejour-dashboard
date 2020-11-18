@@ -12,7 +12,7 @@ class TotalHeader extends Component {
       values: []
     };
 
-    this.state = {
+    this.state = {     
       localData: {
         data: [],
         period: [],
@@ -46,6 +46,7 @@ class TotalHeader extends Component {
   }
 
   componentDidMount() {
+
     this.receberUsuarios();
 
     var ctx = document.getElementById("agendamentosChart").getContext("2d");
@@ -372,6 +373,7 @@ class TotalHeader extends Component {
 
   render() {
     return (
+     
       <div className="main">
         <div className="view-options">
           <button>1 Semana</button>
@@ -422,6 +424,7 @@ class TotalHeader extends Component {
         </div>
         <div className="Divisor" />
       </div>
+     
     );
   }
 }
