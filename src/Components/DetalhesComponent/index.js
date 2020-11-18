@@ -4,10 +4,10 @@ import "./styles.css";
 import api from "../../Api.js";
 import "../../Styles/root.css";
 
-import search_icon from '../../Images/search-icon.svg'
-import wedding_icon from '../../Images/wedding-icon.svg'
-import user_icon from '../../Images/user-icon.svg'
-import agendamentos_icon from '../../Images/agendamentos-icon.svg'
+import search_icon from "../../Images/search-icon.svg";
+import wedding_icon from "../../Images/wedding-icon.svg";
+import user_icon from "../../Images/user-icon.svg";
+import agendamentos_icon from "../../Images/agendamentos-icon.svg";
 
 class DetalhesComponent extends Component {
   constructor(props) {
@@ -48,15 +48,13 @@ class DetalhesComponent extends Component {
   }
 
   loadData() {
-    api.get("user?limit=10").then((response) => {
+    api.get("user?limit=10").then(response => {
       const user_data = response.data;
       var listId = [];
       var dataList = [];
       user_data.map((valor, idx) => {
         listId = listId.concat(user_data[idx].ID);
-        dataList = dataList.concat(
-          user_data[idx].CREATED_AT
-        );
+        dataList = dataList.concat(user_data[idx].CREATED_AT);
 
         this.setState({
           usuario: {
@@ -65,10 +63,9 @@ class DetalhesComponent extends Component {
           }
         });
       });
-
     });
 
-    api.get("wedding?limit=10").then((response) => {
+    api.get("wedding?limit=10").then(response => {
       const wedding_data = response.data;
 
       var id_casamento_list = [];
@@ -79,25 +76,14 @@ class DetalhesComponent extends Component {
       var valor_list = [];
 
       wedding_data.map((valor, idx) => {
-        id_casamento_list = id_casamento_list.concat(
-          wedding_data[idx].ID
-        );
-        id_owner_list = id_owner_list.concat(
-          wedding_data[idx].OWNER_ID
-        );
+        id_casamento_list = id_casamento_list.concat(wedding_data[idx].ID);
+        id_owner_list = id_owner_list.concat(wedding_data[idx].OWNER_ID);
         nr_convidados_list = nr_convidados_list.concat(
           wedding_data[idx].NUMBER_OF_GUESTS
         );
-        estilo_list = estilo_list.concat(
-          wedding_data[idx].STYLE
-        );
-        date_list = date_list.concat(
-          wedding_data[idx].WEDDING_DATE
-        );
-        valor_list = valor_list.concat(
-          wedding_data[idx].BUDGET
-        );
-
+        estilo_list = estilo_list.concat(wedding_data[idx].STYLE);
+        date_list = date_list.concat(wedding_data[idx].WEDDING_DATE);
+        valor_list = valor_list.concat(wedding_data[idx].BUDGET);
       });
 
       this.setState({
@@ -110,10 +96,9 @@ class DetalhesComponent extends Component {
           data: date_list
         }
       });
-
     });
 
-    api.get("appointment?limit=10").then((response) => {
+    api.get("appointment?limit=10").then(response => {
       const appointment_data = response.data;
       var id_list = [];
       var id_casamento_list = [];
@@ -122,9 +107,7 @@ class DetalhesComponent extends Component {
       var categoria_fornecedor_list = [];
 
       appointment_data.map((valor, idx) => {
-        id_list = id_list.concat(
-          appointment_data[idx].ID
-        );
+        id_list = id_list.concat(appointment_data[idx].ID);
 
         id_casamento_list = id_casamento_list.concat(
           appointment_data[idx].WEDDING_ID
@@ -134,9 +117,7 @@ class DetalhesComponent extends Component {
           appointment_data[idx].VENDOR_ID
         );
 
-        status_list = status_list.concat(
-          appointment_data[idx].STATUS
-        );
+        status_list = status_list.concat(appointment_data[idx].STATUS);
 
         categoria_fornecedor_list = categoria_fornecedor_list.concat(
           appointment_data[idx].VENDOR_CATEGORY
@@ -152,10 +133,8 @@ class DetalhesComponent extends Component {
           categoria_fornecedor: categoria_fornecedor_list
         }
       });
-
     });
-
-  };
+  }
 
   redirect = num => {
     console.log(num);
@@ -234,41 +213,45 @@ class DetalhesComponent extends Component {
         <div className="last">
           <div className="big-card">
             <div className="mini-header">
-              <div className='inputHeader'>
-                <img src={wedding_icon} alt=''></img>
+              <div className="inputHeader">
+                <img src={wedding_icon} alt="" />
                 <h1>Últimos Agendamentos</h1>
               </div>
-              <div className='search-div'>
+              <div className="search-div">
                 <input />
-                <button><img src={search_icon} alt='pesquisar' /></button>
+                <button>
+                  <img src={search_icon} alt="pesquisar" />
+                </button>
               </div>
             </div>
             <ul>
               <li className="listElement">
-                <strong>id</strong>
-                <strong>valor</strong>
-                <strong>conv</strong>
-                <strong>estilo</strong>
-                <strong>data</strong>
+                <strong className="style-modifier">id</strong>
+                <strong className="style-modifier">valor</strong>
+                <strong className="style-modifier">conv</strong>
+                <strong className="style-modifier">estilo</strong>
+                <strong className="style-modifier">data</strong>
               </li>
               {this.listaCasamentos()}
             </ul>
           </div>
           <div className="big-card" id="card_usuarios">
             <div className="mini-header">
-              <div className='inputHeader'>
-                <img src={user_icon} alt=''></img>
+              <div className="inputHeader">
+                <img src={user_icon} alt="" />
                 <h1>Últimos Usuários</h1>
               </div>
-              <div className='search-div'>
+              <div className="search-div">
                 <input />
-                <button><img src={search_icon} alt='pesquisar' /></button>
+                <button>
+                  <img src={search_icon} alt="pesquisar" />
+                </button>
               </div>
             </div>
             <ul>
               <li className="listElement">
-                <strong>id</strong>
-                <strong>data</strong>
+                <strong className="style-modifier">id</strong>
+                <strong className="style-modifier">data</strong>
               </li>
               {this.listaUsuarios()}
             </ul>
@@ -277,22 +260,24 @@ class DetalhesComponent extends Component {
         <div className="StatusAgendamento">
           <div className="big-card">
             <div className="mini-header">
-              <div className='inputHeader'>
-                <img src={agendamentos_icon} alt=''></img>
+              <div className="inputHeader">
+                <img src={agendamentos_icon} alt="" />
                 <h1>Status de Agendamentos</h1>
               </div>
-              <div className='search-div'>
+              <div className="search-div">
                 <input />
-                <button><img src={search_icon} alt='pesquisar' /></button>
+                <button>
+                  <img src={search_icon} alt="pesquisar" />
+                </button>
               </div>
             </div>
             <ul>
               <li className="listElement">
-                <strong>id</strong>
-                <strong>id_casamento</strong>
-                <strong>conv</strong>
-                <strong>status</strong>
-                <strong>id_dis</strong>
+                <strong className="style-modifier">id</strong>
+                <strong className="style-modifier">id_casamento</strong>
+                <strong className="style-modifier">conv</strong>
+                <strong className="style-modifier">status</strong>
+                <strong className="style-modifier">id_dis</strong>
               </li>
               {this.listaAgendamentos()}
             </ul>
