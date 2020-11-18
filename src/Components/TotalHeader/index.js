@@ -144,7 +144,14 @@ class TotalHeader extends Component {
               "#DB5D79",
               "#E2645A",
               "#86D0CB",
-              "#D46382"
+              "#D46382",
+              '#649fcc',
+              '#84e4fa',
+              '#d46382',
+              '#ff7d47',
+              '#84a6fa',
+              '#ffb854',
+              '#64cc87'
             ],
             borderColor: ["#E2645A"],
             borderWidth: 2
