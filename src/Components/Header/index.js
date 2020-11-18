@@ -7,9 +7,9 @@ class Header extends Component {
   render() {
     return (
       <div className="header">
-        <img src={lejourLogo} alt="Lejour" />
+        <a href="https://painel.lejour.com.br/buscar"><img src={lejourLogo} alt="Lejour" /></a>
         <h1> Dashboard </h1>
-        <button id="red-button">Sair</button>
+        <a href="https://painel.lejour.com.br/login"> <button id="red-button"> Sair</button></a>
       </div>
     );
   }

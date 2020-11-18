@@ -41,76 +41,61 @@ class DetalhesComponent extends Component {
     };
   }
   componentDidMount() {
-    this.receberDados();
+    this.loadData();
   }
-  receberDados = async () => {
-    const userData = await api.get("user?limit=10");
-    const weddingData = await api.get("wedding?limit=10");
-    const appointmentData = await api.get("appointment?limit=20");
 
-    let today = new Date();
+  loadData() {
+    api.get("user?limit=10").then((response) => {
+      const user_data = response.data;
+      var listId = [];
+      var dataList = [];
+      user_data.map((valor, idx) => {
+        listId = listId.concat(user_data[idx].ID);
+        dataList = dataList.concat(
+          user_data[idx].CREATED_AT
+        );
 
-    userData.data.map((valor, idx) => {
-      const listId = this.state.usuario.idUsuario.concat(userData.data[idx].ID);
-      const dataList = this.state.usuario.data.concat(
-        userData.data[idx].CREATED_AT
-      );
-
-      this.setState({
-        usuario: {
-          idUsuario: listId,
-          data: dataList
-        }
+        this.setState({
+          usuario: {
+            idUsuario: listId,
+            data: dataList
+          }
+        });
       });
+
     });
 
-    appointmentData.data.map((valor, idx) => {
-      const id_list = this.state.appointment.id.concat(
-        appointmentData.data[idx].ID
-      );
-      const id_casamento_list = this.state.appointment.id_casamento.concat(
-        appointmentData.data[idx].WEDDING_ID
-      );
-      const id_distribuidor_list = this.state.appointment.id_distribuidor.concat(
-        appointmentData.data[idx].VENDOR_ID
-      );
-      const status_list = this.state.appointment.status.concat(
-        appointmentData.data[idx].STATUS
-      );
-      const categoria_fornecedor_list = this.state.appointment.status.concat(
-        appointmentData.data[idx].VENDOR_CATEGORY
-      );
+    api.get("wedding?limit=10").then((response) => {
+      const wedding_data = response.data;
 
-      this.setState({
-        appointment: {
-          id: id_list,
-          id_casamento: id_casamento_list,
-          id_distribuidor: id_distribuidor_list,
-          status: status_list,
-          categoria_fornecedor: categoria_fornecedor_list
-        }
-      });     
-    });
+      var id_casamento_list = [];
+      var id_owner_list = [];
+      var nr_convidados_list = [];
+      var estilo_list = [];
+      var date_list = [];
+      var valor_list = [];
 
-    weddingData.data.map((valor, idx) => {
-      const id_casamento_list = this.state.casamentos.idCasamento.concat(
-        weddingData.data[idx].ID
-      );
-      const id_owner_list = this.state.casamentos.idUsuario.concat(
-        weddingData.data[idx].OWNER_ID
-      );
-      const nr_convidados_list = this.state.casamentos.nrConvidados.concat(
-        weddingData.data[idx].NUMBER_OF_GUESTS
-      );
-      const estilo_list = this.state.casamentos.estilo.concat(
-        weddingData.data[idx].STYLE
-      );
-      const date_list = this.state.casamentos.data.concat(
-        weddingData.data[idx].WEDDING_DATE
-      );
-      const valor_list = this.state.casamentos.nrOrcamento.concat(
-        weddingData.data[idx].BUDGET
-      );
+      wedding_data.map((valor, idx) => {
+        id_casamento_list = id_casamento_list.concat(
+          wedding_data[idx].ID
+        );
+        id_owner_list = id_owner_list.concat(
+          wedding_data[idx].OWNER_ID
+        );
+        nr_convidados_list = nr_convidados_list.concat(
+          wedding_data[idx].NUMBER_OF_GUESTS
+        );
+        estilo_list = estilo_list.concat(
+          wedding_data[idx].STYLE
+        );
+        date_list = date_list.concat(
+          wedding_data[idx].WEDDING_DATE
+        );
+        valor_list = valor_list.concat(
+          wedding_data[idx].BUDGET
+        );
+
+      });
 
       this.setState({
         casamentos: {
@@ -122,7 +107,51 @@ class DetalhesComponent extends Component {
           data: date_list
         }
       });
+
     });
+
+    api.get("appointment?limit=10").then((response) => {
+      const appointment_data = response.data;
+      var id_list = [];
+      var id_casamento_list = [];
+      var id_distribuidor_list = [];
+      var status_list = [];
+      var categoria_fornecedor_list = [];
+
+      appointment_data.map((valor, idx) => {
+        id_list = id_list.concat(
+          appointment_data[idx].ID
+        );
+
+        id_casamento_list = id_casamento_list.concat(
+          appointment_data[idx].WEDDING_ID
+        );
+
+        id_distribuidor_list = id_distribuidor_list.concat(
+          appointment_data[idx].VENDOR_ID
+        );
+
+        status_list = status_list.concat(
+          appointment_data[idx].STATUS
+        );
+
+        categoria_fornecedor_list = categoria_fornecedor_list.concat(
+          appointment_data[idx].VENDOR_CATEGORY
+        );
+      });
+
+      this.setState({
+        appointment: {
+          id: id_list,
+          id_casamento: id_casamento_list,
+          id_distribuidor: id_distribuidor_list,
+          status: status_list,
+          categoria_fornecedor: categoria_fornecedor_list
+        }
+      });
+
+    });
+
   };
 
   redirect = num => {
