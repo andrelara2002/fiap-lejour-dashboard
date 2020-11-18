@@ -61,7 +61,8 @@ class TotalHeader extends Component {
       },
       usuarios: {
         id: [],
-        data: []
+        data: [],
+        
       },
       casamentos: {
         id_cliente: [],
@@ -79,7 +80,13 @@ class TotalHeader extends Component {
         total_approved: 0,
         total_amount: 0,
         data: []
-      }
+      },
+      total_users: 0,
+      total_weddings: 0,
+      total_invoices_register: 0,
+      total__invoices_pending: 0,
+      total_invoices_approved: 0,
+      total_invoices_amount: 0,
     };
   }
 
@@ -223,8 +230,9 @@ class TotalHeader extends Component {
       this.setState({
         usuarios: {
           id: listId,
-          data: dataList
-        }
+          data: dataList          
+        },
+        total_users: dataList.length
       }, () => {
         this.filterDataChars(filterChars.Year);
       });
@@ -269,7 +277,8 @@ class TotalHeader extends Component {
           nr_convidados: nr_convidados_list,
           estilo: estilo_list,
           data: date_list
-        }
+        },
+        total_weddings: date_list
       }, () => {
         this.filterDataChars(filterChars.Year);
       });
@@ -304,8 +313,10 @@ class TotalHeader extends Component {
           agendamento: weddingTotalInMonths
         }
       },
-      usuarios: this.state.usuarios,
-      casamentos: this.state.casamentos
+      total_weddings: weddingTotalInMonths.reduce((sum, item) => {
+        return sum + item;
+      }, 0)
+      
     }, () => {
 
       this.myChart.data.labels = this.state.localData.period;
@@ -326,18 +337,16 @@ class TotalHeader extends Component {
           agendamento: this.state.casamentos.data
         }
       },
-      usuarios: this.state.usuarios,
-      casamentos: this.state.casamentos
+      total_users: usersTotalInMonths.reduce((sum, item) => {
+        return sum + item;
+      }, 0)
     }, () => {
 
       this.usuariosChart.data.labels = this.state.localData.period;
       this.usuariosChart.data.datasets[0].label = filterChar;   
       this.usuariosChart.data.datasets[0].data = usersTotalInMonths;
       this.usuariosChart.update();
-
     });
-
-
   }
 
   filterDataChars = filterChar => {
@@ -485,12 +494,12 @@ class TotalHeader extends Component {
         <div className="main-mini">
           <div className="mini-card">
             <strong>Usuários</strong>
-            <h1>{this.state.usuarios.id.length}</h1>
+            <h1>{this.state.total_users}</h1>
             <p>+22%</p>
           </div>
           <div className="mini-card">
             <strong>Agendamentos</strong>
-            <h1>{this.state.casamentos.id_cliente.length}</h1>
+            <h1>{this.state.total_weddings}</h1>
             <p>+22%</p>
           </div>
           <div className="mini-card">
@@ -510,13 +519,13 @@ class TotalHeader extends Component {
           </div>
         </div>
         <div className="main-big">
+        <div className="big-chart">
+            <strong>Usuários</strong>
+            <canvas id="usuariosChart" width="100" height="100" />
+          </div>          
           <div className="big-chart">
             <strong>Agendamentos</strong>
             <canvas id="agendamentosChart" width="100" height="100" />
-          </div>
-          <div className="big-chart">
-            <strong>Usuários</strong>
-            <canvas id="usuariosChart" width="100" height="100" />
           </div>
           <div className="big-chart">
             <strong>Categorias vs Notas</strong>
