@@ -59,7 +59,7 @@ class DetalhesComponent extends Component {
         return response;
       })
       .catch((response) => {
-        response.data = userDatabase;
+        response.data = userDatabase.slice(0,10);
         return response;
       })
       .then((response) => {
@@ -84,7 +84,7 @@ class DetalhesComponent extends Component {
         return response;
       })
       .catch((response) => {
-        response.data = wenddingDatabase;
+        response.data = wenddingDatabase.slice(0,10);
         return response;
       })
       .then(response => {
@@ -125,7 +125,7 @@ class DetalhesComponent extends Component {
         return response;
       })
       .catch((response) => {
-        response.data = appointmentDatabase;
+        response.data = appointmentDatabase.slice(0,10);
         return response;
       })
       .then(response => {
