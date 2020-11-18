@@ -483,27 +483,27 @@ class TotalHeader extends Component {
           </div>
         </div>
         <div className="main-mini">
-          <div class="mini-card">
+          <div className="mini-card">
             <strong>Usuários</strong>
             <h1>{this.state.usuarios.id.length}</h1>
             <p>+22%</p>
           </div>
-          <div class="mini-card">
+          <div className="mini-card">
             <strong>Agendamentos</strong>
             <h1>{this.state.casamentos.id_cliente.length}</h1>
             <p>+22%</p>
           </div>
-          <div class="mini-card">
+          <div className="mini-card">
             <strong>Pendentes</strong>
             <h1>{this.state.invoices.total_pending}</h1>
             <p>+22%</p>
           </div>
-          <div class="mini-card">
+          <div className="mini-card">
             <strong>Aprovados</strong>
             <h1>{this.state.invoices.total_approved}</h1>
             <p>+22%</p>
           </div>
-          <div class="mini-card">
+          <div className="mini-card">
             <strong>Total</strong>
             <h1>{this.state.invoices.total_amount}</h1>
             <p>+22%</p>
