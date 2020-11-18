@@ -87,8 +87,7 @@ class DetalhesComponent extends Component {
           status: status_list,
           categoria_fornecedor: categoria_fornecedor_list
         }
-      });
-      console.log(this.state.appointment);
+      });     
     });
 
     weddingData.data.map((valor, idx) => {
