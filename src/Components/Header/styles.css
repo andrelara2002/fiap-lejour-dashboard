@@ -29,5 +29,5 @@ img {
   padding: 0.6rem 3rem;
 
   background: var(--button-red-color);
-  box-shadow: var(--button-red-shadow: );
+  box-shadow: var(--button-red-shadow);
 }
