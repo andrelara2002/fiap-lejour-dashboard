@@ -198,7 +198,7 @@ class TotalHeader extends Component {
     const invoice_total_pending = invoice_data.filter(x => x.ACCEPTED != "TRUE")
       .length;
     const invoice_total_approved = invoice_data.filter(
-      x => x.ACCEPTED == "TRUE"
+      x => x.ACCEPTED == "TRUE" || x.ACCEPTED == true
     ).length;
     const invoice_total_amount = invoice_data
       .reduce((sum, item) => {
@@ -414,7 +414,7 @@ class TotalHeader extends Component {
         this.notasChart.data.labels = labels;
         this.notasChart.data.datasets[0].label = filterChar;
         this.notasChart.data.datasets[0].data = data;
-        this.notasChart.data.datasets[0].backgroundColor = colors;
+        //this.notasChart.data.datasets[0].backgroundColor = colors;
         this.notasChart.update();
       });
   }
