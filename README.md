@@ -30,7 +30,7 @@ This dashboard was created as part of a university project. The data used in thi
 ## License
 This dashboard is licensed under the MIT License.
 
-## Site publicado
+## Published project
 
 Our model is published over [this link](https://fiap-lejour-dashboard.vercel.app/)
 
